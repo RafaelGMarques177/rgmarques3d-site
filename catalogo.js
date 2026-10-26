@@ -4,7 +4,7 @@
 // preco = "a partir de", em reais (estimativa; ajuste à vontade).
 
 window.CONFIG = {
-  instagram: "rgmarques3d",      // @ do Instagram (sem o @)
+  instagram: "rg.marqs_3d",      // @ do Instagram (sem o @)
   whatsapp: "",                  // deixe vazio para esconder o botão de WhatsApp
   bairro: "Penha de França, São Paulo (SP)",
   conferido: "26/10/2026"
