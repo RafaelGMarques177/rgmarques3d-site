@@ -733,6 +733,15 @@ footer img { height: 30px; }
     else { ta.select(); document.execCommand && document.execCommand("copy"); ok(); }
   };
 
+  // Link de ativação do FormSubmit: abra o site com ?ativar no fim do endereço
+  if (C.email && /[?&]ativar\b/.test(location.search)) {
+    fetch("https://formsubmit.co/ajax/" + C.email, {
+      method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify({ _subject: "Teste de ativação - site RG Marques 3D", _captcha: "false", Mensagem: "Pedido de teste para ativar o recebimento de pedidos do site." })
+    }).then(r => r.json()).then(d => alert(String(d.success) === "true" ? "Teste enviado! Veja seu e-mail." : "FormSubmit: " + (d.message || "verifique seu e-mail")))
+      .catch(() => alert("Não foi possível enviar o teste agora."));
+  }
+
   const igUrl = "https://ig.me/m/" + C.instagram;
   document.querySelectorAll(".js-insta").forEach(a => a.href = igUrl);
   document.querySelectorAll(".js-handle").forEach(el => el.textContent = "@" + C.instagram);
