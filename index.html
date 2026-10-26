@@ -168,6 +168,22 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
 .msg-box { background: var(--bg); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; display: grid; gap: 12px; align-content: start; }
 .msg-box pre { margin: 0; white-space: pre-wrap; word-break: break-word; font: 13.5px/1.5 var(--font-mono); color: var(--fg-2); max-height: 320px; overflow: auto; }
 .msg-box .status { font-size: 13.5px; color: var(--ok); min-height: 1.3em; }
+#checkout .status { font-size: 13.5px; color: var(--accent); min-height: 1.3em; margin-top: 8px; }
+#checkout .btn { width: 100%; }
+.cart-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.cart-list li { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 12px; align-items: center; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px; }
+.cart-list img, .cart-list .ph { width: 56px; height: 56px; border-radius: 6px; object-fit: cover; background: #EDEBE6; }
+.cart-list .nm { font-weight: 600; font-size: 14.5px; }
+.cart-list .det { color: var(--fg-3); font-size: 12.5px; }
+.cart-list .qty { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 13px; }
+.cart-list .qty button { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--line); background: transparent; color: var(--fg); cursor: pointer; }
+.totals { display: grid; gap: 4px; font-size: 14.5px; }
+.totals div { display: flex; justify-content: space-between; }
+.totals .tot { font-weight: 700; font-size: 17px; border-top: 1px solid var(--line); padding-top: 6px; margin-top: 4px; }
+.pix { display: grid; gap: 12px; justify-items: center; text-align: center; }
+.pix #pix-qr { background: #fff; padding: 10px; border-radius: 8px; }
+.pix textarea { width: 100%; min-height: 84px; background: var(--bg-3); color: var(--fg); border: 1px solid var(--line); border-radius: 8px; padding: 10px; font: 12px var(--font-mono); resize: none; }
+.cart-count { background: var(--accent-ink); color: var(--accent); border-radius: 999px; padding: 1px 7px; font-size: 12px; }
 .steps-mini { margin: 0; padding-left: 18px; color: var(--fg-2); font-size: 14px; display: grid; gap: 4px; }
 
 /* Como funciona */
@@ -205,18 +221,17 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; gap: 12px 24
 footer img { height: 30px; }
 </style>
 
-<div class="preview-bar"><div class="wrap">Prévia do site. Preços são estimativas e o @ do Instagram ainda precisa ser confirmado.</div></div>
 
 <header class="top">
   <div class="wrap">
     <a class="brand" href="#inicio" aria-label="RG Marques 3D Studio, início"><img src="img/logo-horizontal-transparente.svg" alt="RG Marques 3D Studio"></a>
     <nav class="menu" aria-label="Seções">
       <a href="#catalogo">Catálogo</a>
-      <a href="#envie">Envie seu modelo</a>
+      <a href="#carrinho">Carrinho</a>
       <a href="#como">Como funciona</a>
       <a href="#quem">Quem somos</a>
     </nav>
-    <a class="btn btn-primary" href="#envie">Fazer pedido</a>
+    <a class="btn btn-primary" href="#carrinho">Carrinho <span class="cart-count" id="cart-count">0</span></a>
   </div>
 </header>
 
@@ -225,7 +240,7 @@ footer img { height: 30px; }
     <div class="wrap">
       <div class="eyebrow">Impressão 3D sob encomenda · envio para todo o Brasil</div>
       <h1>A peça que você imaginar, <em>impressa camada por camada.</em></h1>
-      <p class="lead">Chaveiros, presentes, brinquedos e peças úteis em até 4 cores. Escolha um modelo do catálogo ou mande o seu, e a gente imprime para você.</p>
+      <p class="lead">Chaveiros, presentes, brinquedos e peças úteis em até 4 cores. Escolha um modelo, as cores, pague com Pix e receba em casa pelos Correios.</p>
       <form class="search" id="heroSearch" role="search">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#151515" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         <input id="q" type="search" aria-label="Buscar modelo" placeholder="Busque: dragão, chaveiro, vaso..." autocomplete="off">
@@ -233,7 +248,7 @@ footer img { height: 30px; }
       </form>
       <div class="quick" id="quick">Mais buscados:</div>
       <div class="specline">
-        <span>Bambu Lab A1 Combo</span><span>até 4 cores por peça</span><span>peças até 25,6 cm</span><span>PLA</span><span>envio pelos Correios</span>
+        <span>pagamento por Pix</span><span>Bambu Lab A1 Combo</span><span>até 4 cores por peça</span><span>peças até 25,6 cm</span><span>PLA</span><span>envio pelos Correios</span>
       </div>
     </div>
   </div>
@@ -253,92 +268,89 @@ footer img { height: 30px; }
     </div>
   </section>
 
-  <section id="envie" class="send">
+  <section id="carrinho" class="send">
     <div class="wrap">
       <div class="sec-head">
         <div>
-          <div class="eyebrow">Envie seu modelo</div>
-          <h2>Tem um arquivo ou uma ideia?</h2>
-          <p>Preencha abaixo, cole o link do arquivo 3D e toque em <b>Enviar pedido</b>. O pedido chega direto para a RG, e a gente te responde com preço e prazo.</p>
+          <div class="eyebrow">Carrinho</div>
+          <h2>Finalize seu pedido</h2>
+          <p>Confira as peças, preencha o endereço de entrega e pague com Pix. O pedido chega direto para a RG e você recebe a confirmação no seu e-mail.</p>
         </div>
       </div>
       <div class="send-grid">
-        <form class="pedido" id="pedido" novalidate>
+        <div class="msg-box">
+          <div class="eyebrow">Suas peças</div>
+          <ul class="cart-list" id="cart-list"></ul>
+          <p class="note" id="cart-empty">Seu carrinho está vazio. Toque em um modelo do <a href="#catalogo">catálogo</a>, escolha as cores e toque em <b>Adicionar ao carrinho</b>.</p>
+          <div class="totals" id="totals"></div>
+        </div>
+        <form class="pedido" id="checkout" novalidate>
           <div class="field">
-            <label for="f-nome">Seu nome</label>
-            <input id="f-nome" type="text" autocomplete="name" placeholder="Ex.: Ana">
+            <label for="c-nome">Nome completo</label>
+            <input id="c-nome" type="text" autocomplete="name" placeholder="Para a etiqueta dos Correios">
           </div>
           <div class="field">
-            <label for="f-contato">Seu WhatsApp ou @ do Instagram</label>
-            <input id="f-contato" type="text" autocomplete="tel" placeholder="Ex.: (11) 99999-9999 ou @ana">
-            <small>É por aqui que a gente te responde.</small>
+            <label for="c-email">E-mail</label>
+            <input id="c-email" type="email" autocomplete="email" placeholder="voce@email.com">
+            <small>A confirmação e o código de rastreio chegam aqui.</small>
           </div>
           <div class="field">
-            <label for="f-qtd">Quantidade</label>
-            <input id="f-qtd" type="number" min="1" value="1" inputmode="numeric">
+            <label for="c-cep">CEP</label>
+            <input id="c-cep" type="text" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000">
+          </div>
+          <div class="field">
+            <label for="c-num">Número</label>
+            <input id="c-num" type="text" autocomplete="address-line2" placeholder="Ex.: 120">
           </div>
           <div class="field full">
-            <label for="f-modelo">O que você quer imprimir</label>
-            <textarea id="f-modelo" placeholder="Ex.: dragão articulado para presente de aniversário"></textarea>
+            <label for="c-rua">Rua</label>
+            <input id="c-rua" type="text" autocomplete="address-line1">
+          </div>
+          <div class="field">
+            <label for="c-comp">Complemento (opcional)</label>
+            <input id="c-comp" type="text" placeholder="Apto, bloco...">
+          </div>
+          <div class="field">
+            <label for="c-bairro">Bairro</label>
+            <input id="c-bairro" type="text">
+          </div>
+          <div class="field">
+            <label for="c-cidade">Cidade</label>
+            <input id="c-cidade" type="text" autocomplete="address-level2">
+          </div>
+          <div class="field">
+            <label for="c-uf">Estado (UF)</label>
+            <input id="c-uf" type="text" maxlength="2" autocomplete="address-level1" placeholder="SP">
           </div>
           <div class="field full">
-            <label for="f-link">Link do arquivo 3D (STL ou 3MF)</label>
-            <input id="f-link" type="url" inputmode="url" placeholder="https://www.printables.com/model/...">
-            <small>Pode ser link do Printables, MakerWorld, Thingiverse, Google Drive ou WeTransfer.</small>
+            <button class="btn btn-primary" id="c-pagar" type="submit">Pagar com Pix</button>
+            <div class="status" id="status" aria-live="polite"></div>
           </div>
-          <div class="field">
-            <label for="f-tam">Tamanho</label>
-            <select id="f-tam">
-              <option>Tamanho do arquivo original</option>
-              <option>Pequeno (até 5 cm)</option>
-              <option>Médio (5 a 12 cm)</option>
-              <option>Grande (12 a 25 cm)</option>
-              <option>Não sei, me ajude</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="f-cores">Cores</label>
-            <input id="f-cores" type="text" placeholder="Ex.: preto e laranja">
-          </div>
-          <div class="field full" id="cep-field">
-            <label for="f-cep">CEP para o envio</label>
-            <input id="f-cep" type="text" inputmode="numeric" placeholder="00000-000" autocomplete="postal-code">
-            <small>A entrega é pelos Correios. Com o CEP a gente já calcula o frete.</small>
+          <div class="field full pix" id="pix-box" hidden>
+            <div class="eyebrow">Pedido <span id="pix-cod"></span></div>
+            <h3 id="pix-valor"></h3>
+            <div id="pix-qr"></div>
+            <textarea id="pix-code" readonly aria-label="Pix copia e cola"></textarea>
+            <button class="btn btn-ghost" id="pix-copy" type="button">Copiar código Pix</button>
+            <ol class="steps-mini" style="text-align:left">
+              <li>Abra o app do seu banco e pague com o QR Code ou o "Pix copia e cola".</li>
+              <li>Assim que o pagamento cair, sua peça entra na impressora.</li>
+              <li>O código de rastreio dos Correios chega no seu e-mail.</li>
+            </ol>
           </div>
         </form>
-        <div class="msg-box">
-          <div class="eyebrow">Sua mensagem</div>
-          <pre id="msg"></pre>
-          <div class="ficha-actions">
-            <button class="btn btn-primary" id="send-mail" type="button" hidden>Enviar pedido</button>
-            <button class="btn btn-primary" id="send-insta" type="button">Copiar e abrir o Direct</button>
-            <button class="btn btn-ghost" id="copy-only" type="button">Só copiar</button>
-            <a class="btn btn-ghost" id="send-wa" href="#" target="_blank" rel="noopener" hidden>WhatsApp</a>
-          </div>
-          <div class="status" id="status" aria-live="polite"></div>
-          <ol class="steps-mini" id="steps-direct">
-            <li>Toque em <b>Copiar e abrir o Direct</b>.</li>
-            <li>No Instagram, cole a mensagem na conversa com <b class="js-handle">@rg.marqs_3d</b>.</li>
-            <li>Respondemos com preço e prazo. Pagamento por Pix.</li>
-          </ol>
-          <ol class="steps-mini" id="steps-mail" hidden>
-            <li>Preencha o formulário e toque em <b>Enviar pedido</b>.</li>
-            <li>O pedido chega direto para a RG. Não precisa mandar mensagem.</li>
-            <li>Respondemos no seu WhatsApp ou Instagram com preço e prazo. Pagamento por Pix.</li>
-          </ol>
-        </div>
       </div>
     </div>
   </section>
 
   <section id="como">
     <div class="wrap">
-      <div class="sec-head"><div><div class="eyebrow">Como funciona</div><h2>Do arquivo à sua mão</h2></div></div>
+      <div class="sec-head"><div><div class="eyebrow">Como funciona</div><h2>Do carrinho à sua casa</h2></div></div>
       <ol class="how">
-        <li><h3>Escolha</h3><p>Busque no catálogo ou mande o link do seu modelo.</p></li>
-        <li><h3>Orçamento</h3><p>Você manda a mensagem no Direct e recebe preço e prazo.</p></li>
-        <li><h3>Impressão</h3><p>Pagou o Pix, a peça entra na impressora com as cores que você escolheu.</p></li>
-        <li><h3>Entrega</h3><p>Enviamos pelos Correios para todo o Brasil.</p></li>
+        <li><h3>Escolha</h3><p>Busque no catálogo, escolha as cores e ponha no carrinho.</p></li>
+        <li><h3>Pague com Pix</h3><p>Preencha o endereço e pague o Pix gerado na hora, com o frete incluído.</p></li>
+        <li><h3>Impressão</h3><p>Pagamento confirmado, a peça entra na impressora com as cores que você escolheu.</p></li>
+        <li><h3>Entrega</h3><p>Enviamos pelos Correios para todo o Brasil e mandamos o rastreio por e-mail.</p></li>
       </ol>
     </div>
   </section>
@@ -398,7 +410,7 @@ footer img { height: 30px; }
       </div>
       <p class="note" id="ficha-note"></p>
       <div class="ficha-actions">
-        <button class="btn btn-primary" id="ficha-pedir" type="button">Pedir orçamento</button>
+        <button class="btn btn-primary" id="ficha-pedir" type="button">Adicionar ao carrinho</button>
         <a class="btn btn-ghost" id="ficha-orig" target="_blank" rel="noopener" hidden>Ver fotos no Printables</a>
       </div>
       <div class="credit" id="ficha-credit"></div>
@@ -407,6 +419,7 @@ footer img { height: 30px; }
 </dialog>
 
 <script src="catalogo.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
 <script>
@@ -478,7 +491,7 @@ footer img { height: 30px; }
     return `<button class="card" type="button" data-id="${i.id}">
       <div class="thumb">${badge}${thumb}</div>
       <div class="body"><h3>${esc(i.nome)}</h3><div class="meta">${meta}</div>
-      <div class="price"><span><small>a partir de </small><strong>${brl(i.preco)}</strong></span>${i.proprio ? "" : `<span class="lic">${i.lic}</span>`}</div></div></button>`;
+      <div class="price"><span><strong>${brl(i.preco)}</strong></span>${i.proprio ? "" : `<span class="lic">${i.lic}</span>`}</div></div></button>`;
   }
   function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
 
@@ -489,7 +502,7 @@ footer img { height: 30px; }
       (catAtual === "todos" || i.cat.includes(catAtual)) &&
       palavras.every(w => i.busca.includes(w)));
     if (!lista.length) {
-      grid.innerHTML = `<div class="empty" style="grid-column:1/-1">Nada encontrado para "<b>${esc(termo)}</b>"${catAtual !== "todos" ? " em " + catNome(catAtual) : ""}.<br>Tem o link do modelo? Mande para a gente fazer o orçamento.<br><a class="btn btn-primary" href="#envie">Enviar meu modelo</a></div>`;
+      grid.innerHTML = `<div class="empty" style="grid-column:1/-1">Nada encontrado para "<b>${esc(termo)}</b>"${catAtual !== "todos" ? " em " + catNome(catAtual) : ""}.<br>Tente outra palavra ou veja todas as categorias.</div>`;
     } else grid.innerHTML = lista.slice(0, limite).map(cardHTML).join("");
     mais.hidden = lista.length <= limite;
     mais.textContent = `Mostrar mais (${lista.length - Math.min(limite, lista.length)} restantes)`;
@@ -523,8 +536,8 @@ footer img { height: 30px; }
     $("#ficha-cat").textContent = atual.cat.map(catNome).join(" · ");
     $("#ficha-nome").textContent = atual.nome;
     const specs = atual.proprio ? Object.assign({}, atual.specs) : {
-      "Tamanho": "a combinar (escolha no pedido)", "Material": "PLA", "Cores": "1 cor; mais cores sob consulta" };
-    specs["A partir de"] = brl(atual.preco);
+      "Tamanho": "tamanho original do modelo", "Material": "PLA", "Cores": "1 cor (escolha abaixo)" };
+    specs["Preço"] = brl(atual.preco);
     $("#ficha-specs").innerHTML = Object.entries(specs).map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("");
     escolha = atual.proprio ? atual.partes.map(p => p[2]) : ["Laranja"];
     renderPartes();
@@ -619,81 +632,116 @@ footer img { height: 30px; }
   $("#ficha-close").onclick = () => ficha.close();
   ficha.addEventListener("click", e => { if (e.target === ficha) ficha.close(); });
   ficha.addEventListener("close", fecharViewer);
+  // ---------- Carrinho ----------
+  let cart = [];
+  try { cart = JSON.parse(localStorage.getItem("rg-cart") || "[]"); } catch (e) { cart = []; }
+  const salvar = () => { try { localStorage.setItem("rg-cart", JSON.stringify(cart)); } catch (e) {} };
+  const FR = C.frete || { valor: 0, gratisAcima: 0 };
+  const totais = () => {
+    const sub = cart.reduce((s, c) => s + c.preco * c.qtd, 0);
+    const frete = !cart.length ? 0 : (FR.gratisAcima && sub >= FR.gratisAcima ? 0 : FR.valor);
+    return { sub, frete, total: sub + frete };
+  };
+  function renderCart() {
+    $("#cart-count").textContent = cart.reduce((s, c) => s + c.qtd, 0);
+    $("#cart-empty").hidden = cart.length > 0;
+    $("#cart-list").innerHTML = cart.map((c, k) => `<li>${c.img ? `<img src="${c.img}" alt="" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ph'}))">` : '<div class="ph"></div>'}
+      <div><div class="nm">${esc(c.nome)}</div><div class="det">${esc(c.cores)} · ${brl(c.preco)}</div></div>
+      <div class="qty"><button type="button" data-k="${k}" data-d="-1" aria-label="Menos">−</button>${c.qtd}<button type="button" data-k="${k}" data-d="1" aria-label="Mais">+</button></div></li>`).join("");
+    const t = totais();
+    $("#totals").innerHTML = cart.length ? `<div><span>Peças</span><span>${brl(t.sub)}</span></div>
+      <div><span>Frete (Correios)</span><span>${t.frete ? brl(t.frete) : "grátis"}</span></div>
+      ${FR.gratisAcima && t.frete ? `<div class="det" style="color:var(--fg-3);font-size:12.5px">Frete grátis a partir de ${brl(FR.gratisAcima)} em peças.</div>` : ""}
+      <div class="tot"><span>Total</span><span>${brl(t.total)}</span></div>` : "";
+  }
+  $("#cart-list").addEventListener("click", e => {
+    const b = e.target.closest("[data-k]"); if (!b) return;
+    const c = cart[+b.dataset.k]; c.qtd += +b.dataset.d;
+    if (c.qtd < 1) cart.splice(+b.dataset.k, 1);
+    salvar(); renderCart();
+  });
   $("#ficha-pedir").onclick = () => {
-    const nomes = atual.proprio ? atual.partes.map(p => p[0]) : ["Cor principal"];
-    $("#f-modelo").value = atual.nome + (atual.proprio ? " (modelo RG)" : "");
-    $("#f-link").value = atual.proprio ? "" : atual.url;
-    $("#f-cores").value = atual.proprio
-      ? nomes.map((n, k) => `${n}: ${escolha[k].toLowerCase()}`).join("; ")
-      : escolha[0].toLowerCase();
-    atualizarMsg(); ficha.close(); $("#envie").scrollIntoView();
+    const nomes = atual.proprio ? atual.partes.map(p => p[0]) : ["Cor"];
+    const cores = atual.proprio ? nomes.map((n, k) => `${n}: ${escolha[k].toLowerCase()}`).join("; ") : "Cor: " + escolha[0].toLowerCase();
+    const igual = cart.find(c => c.id === atual.id && c.cores === cores);
+    if (igual) igual.qtd++;
+    else cart.push({ id: atual.id, nome: atual.nome, cores, preco: atual.preco, qtd: 1, img: atual.proprio ? atual.img : (atual.foto || ""), link: atual.url || "" });
+    salvar(); renderCart(); ficha.close(); $("#carrinho").scrollIntoView();
+  };
+  renderCart();
+
+  // ---------- Pix (BR Code estático, gerado no navegador) ----------
+  const semAcento = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toUpperCase();
+  const campo = (id, v) => id + String(v.length).padStart(2, "0") + v;
+  function crc16(s) {
+    let c = 0xFFFF;
+    for (let i = 0; i < s.length; i++) { c ^= s.charCodeAt(i) << 8; for (let b = 0; b < 8; b++) c = c & 0x8000 ? (c << 1) ^ 0x1021 : c << 1; c &= 0xFFFF; }
+    return c.toString(16).toUpperCase().padStart(4, "0");
+  }
+  function pixPayload(valor, txid) {
+    const P = C.pix;
+    let s = campo("00", "01") + campo("26", campo("00", "br.gov.bcb.pix") + campo("01", P.chave)) +
+      campo("52", "0000") + campo("53", "986") + campo("54", valor.toFixed(2)) + campo("58", "BR") +
+      campo("59", semAcento(P.nome).slice(0, 25)) + campo("60", semAcento(P.cidade).slice(0, 15)) +
+      campo("62", campo("05", txid)) + "6304";
+    return s + crc16(s);
+  }
+
+  const status = $("#status");
+  $("#checkout").addEventListener("submit", e => {
+    e.preventDefault();
+    const v = id => $(id).value.trim();
+    if (!cart.length) { status.textContent = "Seu carrinho está vazio."; return; }
+    for (const [id, nome] of [["#c-nome", "o nome"], ["#c-email", "o e-mail"], ["#c-cep", "o CEP"], ["#c-rua", "a rua"], ["#c-num", "o número"], ["#c-bairro", "o bairro"], ["#c-cidade", "a cidade"], ["#c-uf", "o estado"]]) {
+      if (!v(id)) { status.textContent = "Falta preencher " + nome + "."; $(id).focus(); return; }
+    }
+    if (!/^\S+@\S+\.\S+$/.test(v("#c-email"))) { status.textContent = "Confira o e-mail."; $("#c-email").focus(); return; }
+    if (v("#c-cep").replace(/\D/g, "").length !== 8) { status.textContent = "O CEP tem 8 números."; $("#c-cep").focus(); return; }
+    if (!C.pix || !C.pix.chave) { status.textContent = "O pagamento por Pix ainda está sendo ativado. Volte em breve!"; return; }
+    const t = totais();
+    const cod = "RG" + Date.now().toString(36).toUpperCase().slice(-6);
+    const endereco = `${v("#c-rua")}, ${v("#c-num")}${v("#c-comp") ? " - " + v("#c-comp") : ""} - ${v("#c-bairro")} - ${v("#c-cidade")}/${v("#c-uf").toUpperCase()} - CEP ${v("#c-cep")}`;
+    const itensTxt = cart.map(c => `${c.qtd}x ${c.nome} (${c.cores}) = ${brl(c.preco * c.qtd)}${c.link ? " | " + c.link : ""}`).join("\n");
+    const code = pixPayload(t.total, cod);
+    const b = $("#c-pagar"); b.disabled = true; b.textContent = "Gerando Pix…"; status.textContent = "";
+    const mostrarPix = () => {
+      $("#pix-cod").textContent = cod; $("#pix-valor").textContent = "Pague " + brl(t.total);
+      $("#pix-code").value = code; $("#pix-qr").innerHTML = "";
+      if (window.QRCode) new QRCode($("#pix-qr"), { text: code, width: 220, height: 220, correctLevel: QRCode.CorrectLevel.M });
+      $("#pix-box").hidden = false; b.hidden = true; $("#pix-box").scrollIntoView({ block: "center" });
+      cart = []; salvar(); renderCart();
+    };
+    if (!C.email) { mostrarPix(); return; }
+    fetch("https://formsubmit.co/ajax/" + C.email, {
+      method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify({ _subject: `Pedido ${cod} - ${brl(t.total)} (aguardando Pix)`, _template: "box", _captcha: "false",
+        _autoresponse: `Recebemos seu pedido ${cod} na RG Marques 3D! Total: ${brl(t.total)}. Assim que o Pix for confirmado, sua peça entra na impressora e enviamos o código de rastreio dos Correios para este e-mail.`,
+        Pedido: cod, Total: brl(t.total), Itens: itensTxt, Frete: t.frete ? brl(t.frete) : "grátis",
+        Nome: v("#c-nome"), email: v("#c-email"), Endereco: endereco })
+    }).then(r => r.json()).then(d => {
+      if (String(d.success) !== "true") throw new Error(d.message || "erro");
+      mostrarPix();
+    }).catch(() => {
+      status.textContent = "Não conseguimos registrar o pedido agora. Confira sua internet e tente de novo.";
+      b.disabled = false; b.textContent = "Pagar com Pix";
+    });
+  });
+  $("#pix-copy").onclick = () => {
+    const ta = $("#pix-code");
+    const ok = () => { $("#pix-copy").textContent = "Código copiado ✓"; };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ta.value).then(ok, () => { ta.select(); });
+    else { ta.select(); document.execCommand && document.execCommand("copy"); ok(); }
   };
 
-  // ---------- Pedido / mensagem ----------
-  const form = $("#pedido"), msg = $("#msg"), status = $("#status");
-  function montarMsg() {
-    const v = id => $(id).value.trim();
-    const linhas = ["Olá, RG Marques 3D! Quero um orçamento:", ""];
-    linhas.push("Nome: " + (v("#f-nome") || "—"));
-    if (v("#f-contato")) linhas.push("Contato: " + v("#f-contato"));
-    linhas.push("Peça: " + (v("#f-modelo") || "—"));
-    if (v("#f-link")) linhas.push("Arquivo: " + v("#f-link"));
-    linhas.push("Tamanho: " + v("#f-tam"));
-    linhas.push("Cores: " + (v("#f-cores") || "a combinar"));
-    linhas.push("Quantidade: " + (v("#f-qtd") || "1"));
-    linhas.push("Entrega: Correios" + (v("#f-cep") ? " (CEP " + v("#f-cep") + ")" : ""));
-    return linhas.join("\n");
-  }
-  function atualizarMsg() {
-    msg.textContent = montarMsg();
-    if (C.whatsapp) $("#send-wa").href = "https://wa.me/" + C.whatsapp + "?text=" + encodeURIComponent(msg.textContent);
-  }
-  form.addEventListener("input", atualizarMsg);
-  form.addEventListener("submit", e => e.preventDefault());
-  function copiar() {
-    const t = msg.textContent;
-    const fallback = () => { const r = document.createRange(); r.selectNodeContents(msg); const s = getSelection(); s.removeAllRanges(); s.addRange(r); status.textContent = "Selecionamos a mensagem. Copie e cole no Direct."; };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      return navigator.clipboard.writeText(t).then(() => { status.textContent = "Mensagem copiada. Agora cole no Direct do Instagram."; }, fallback);
-    }
-    fallback(); return Promise.resolve();
-  }
   const igUrl = "https://ig.me/m/" + C.instagram;
-  $("#send-insta").onclick = () => { copiar(); const a = document.createElement("a"); a.href = igUrl; a.target = "_blank"; a.rel = "noopener"; document.body.appendChild(a); a.click(); a.remove(); };
-  $("#copy-only").onclick = copiar;
   document.querySelectorAll(".js-insta").forEach(a => a.href = igUrl);
   document.querySelectorAll(".js-handle").forEach(el => el.textContent = "@" + C.instagram);
-  if (C.whatsapp) $("#send-wa").hidden = false;
-
-  // Envio direto por e-mail (FormSubmit, grátis): o pedido chega na caixa da RG
-  if (C.email) {
-    $("#send-mail").hidden = false; $("#steps-mail").hidden = false; $("#steps-direct").hidden = true;
-    $("#send-insta").className = "btn btn-ghost"; $("#send-insta").textContent = "Prefiro o Direct";
-    $("#send-mail").onclick = () => {
-      const nome = $("#f-nome").value.trim(), contato = $("#f-contato").value.trim();
-      if (!contato) { status.style.color = ""; status.textContent = "Coloque seu WhatsApp ou @ do Instagram para a gente te responder."; $("#f-contato").focus(); return; }
-      if (!$("#f-modelo").value.trim() && !$("#f-link").value.trim()) { status.textContent = "Conte o que você quer imprimir ou cole o link do arquivo."; $("#f-modelo").focus(); return; }
-      const b = $("#send-mail"); b.disabled = true; b.textContent = "Enviando…"; status.textContent = "";
-      fetch("https://formsubmit.co/ajax/" + C.email, {
-        method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify({ _subject: "Novo pedido pelo site: " + (nome || "cliente"), _template: "box", _captcha: "false",
-          Nome: nome || "—", Contato: contato, Pedido: msg.textContent })
-      }).then(r => r.json()).then(d => {
-        if (String(d.success) !== "true") throw new Error(d.message || "erro");
-        status.textContent = "Pedido enviado! A RG vai te responder em breve no contato que você deixou.";
-        b.textContent = "Pedido enviado ✓";
-      }).catch(() => {
-        status.textContent = "Não deu para enviar agora. Toque em \"Prefiro o Direct\" para mandar pelo Instagram.";
-        b.disabled = false; b.textContent = "Enviar pedido";
-      });
-    };
-  }
 
   // ---------- Licenças ----------
   $("#conferido").textContent = C.conferido;
   $("#lic-body").innerHTML = itens.filter(i => !i.proprio).map(i =>
     `<tr><td>${esc(i.nome)}</td><td>${esc(i.autor)}</td><td><a href="${LIC_URL[i.lic]}" target="_blank" rel="noopener">${i.lic}</a></td><td><a href="${i.url}" target="_blank" rel="noopener">Printables</a></td></tr>`).join("");
 
-  renderFiltros(); renderGrid(); atualizarMsg();
+  renderFiltros(); renderGrid();
 })();
 </script>

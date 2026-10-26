@@ -1,12 +1,14 @@
 // Catálogo da RG Marques 3D.
 // Modelos de outros criadores: só licenças que permitem vender a peça impressa
 // (CC BY, CC BY-SA, CC0, GPL, BSD). Sem personagens de marca (Pokémon, Disney, Star Wars...) nem armas. Licença conferida na API do Printables em 26/10/2026.
-// preco = "a partir de", em reais (estimativa; ajuste à vontade).
+// preco = preço final da peça em reais (ajuste à vontade).
 
 window.CONFIG = {
   instagram: "rg.marqs_3d",      // @ do Instagram (sem o @)
   whatsapp: "",                  // deixe vazio para esconder o botão de WhatsApp
-  email: "rafael.g.marques.17@gmail.com", // e-mail que recebe os pedidos do site (vazio = só Direct)
+  email: "rafael.g.marques.17@gmail.com", // e-mail que recebe os pedidos do site
+  pix: { chave: "", nome: "RG MARQUES 3D", cidade: "SAO PAULO" },  // chave Pix que recebe os pagamentos
+  frete: { valor: 20, gratisAcima: 150 },  // frete fixo dos Correios (R$) e frete grátis a partir de (R$)
   conferido: "26/10/2026"
 };
 
