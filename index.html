@@ -259,7 +259,7 @@ footer img { height: 30px; }
         <div>
           <div class="eyebrow">Envie seu modelo</div>
           <h2>Tem um arquivo ou uma ideia?</h2>
-          <p>Preencha abaixo e cole o link do arquivo 3D. O site monta a mensagem, você envia no Direct do Instagram e recebe o orçamento.</p>
+          <p>Preencha abaixo, cole o link do arquivo 3D e toque em <b>Enviar pedido</b>. O pedido chega direto para a RG, e a gente te responde com preço e prazo.</p>
         </div>
       </div>
       <div class="send-grid">
@@ -267,6 +267,11 @@ footer img { height: 30px; }
           <div class="field">
             <label for="f-nome">Seu nome</label>
             <input id="f-nome" type="text" autocomplete="name" placeholder="Ex.: Ana">
+          </div>
+          <div class="field">
+            <label for="f-contato">Seu WhatsApp ou @ do Instagram</label>
+            <input id="f-contato" type="text" autocomplete="tel" placeholder="Ex.: (11) 99999-9999 ou @ana">
+            <small>É por aqui que a gente te responde.</small>
           </div>
           <div class="field">
             <label for="f-qtd">Quantidade</label>
@@ -279,7 +284,7 @@ footer img { height: 30px; }
           <div class="field full">
             <label for="f-link">Link do arquivo 3D (STL ou 3MF)</label>
             <input id="f-link" type="url" inputmode="url" placeholder="https://www.printables.com/model/...">
-            <small>Pode ser link do Printables, MakerWorld, Thingiverse, Google Drive ou WeTransfer. O Direct não aceita arquivo STL, por isso o link.</small>
+            <small>Pode ser link do Printables, MakerWorld, Thingiverse, Google Drive ou WeTransfer.</small>
           </div>
           <div class="field">
             <label for="f-tam">Tamanho</label>
@@ -311,15 +316,21 @@ footer img { height: 30px; }
           <div class="eyebrow">Sua mensagem</div>
           <pre id="msg"></pre>
           <div class="ficha-actions">
+            <button class="btn btn-primary" id="send-mail" type="button" hidden>Enviar pedido</button>
             <button class="btn btn-primary" id="send-insta" type="button">Copiar e abrir o Direct</button>
             <button class="btn btn-ghost" id="copy-only" type="button">Só copiar</button>
             <a class="btn btn-ghost" id="send-wa" href="#" target="_blank" rel="noopener" hidden>WhatsApp</a>
           </div>
           <div class="status" id="status" aria-live="polite"></div>
-          <ol class="steps-mini">
+          <ol class="steps-mini" id="steps-direct">
             <li>Toque em <b>Copiar e abrir o Direct</b>.</li>
             <li>No Instagram, cole a mensagem na conversa com <b class="js-handle">@rg.marqs_3d</b>.</li>
             <li>Respondemos com preço e prazo. Pagamento por Pix.</li>
+          </ol>
+          <ol class="steps-mini" id="steps-mail" hidden>
+            <li>Preencha o formulário e toque em <b>Enviar pedido</b>.</li>
+            <li>O pedido chega direto para a RG. Não precisa mandar mensagem.</li>
+            <li>Respondemos no seu WhatsApp ou Instagram com preço e prazo. Pagamento por Pix.</li>
           </ol>
         </div>
       </div>
@@ -631,6 +642,7 @@ footer img { height: 30px; }
     const entrega = (form.querySelector('[name="entrega"]:checked') || {}).value || "";
     const linhas = ["Olá, RG Marques 3D! Quero um orçamento:", ""];
     linhas.push("Nome: " + (v("#f-nome") || "—"));
+    if (v("#f-contato")) linhas.push("Contato: " + v("#f-contato"));
     linhas.push("Peça: " + (v("#f-modelo") || "—"));
     if (v("#f-link")) linhas.push("Arquivo: " + v("#f-link"));
     linhas.push("Tamanho: " + v("#f-tam"));
@@ -660,6 +672,30 @@ footer img { height: 30px; }
   document.querySelectorAll(".js-insta").forEach(a => a.href = igUrl);
   document.querySelectorAll(".js-handle").forEach(el => el.textContent = "@" + C.instagram);
   if (C.whatsapp) $("#send-wa").hidden = false;
+
+  // Envio direto por e-mail (FormSubmit, grátis): o pedido chega na caixa da RG
+  if (C.email) {
+    $("#send-mail").hidden = false; $("#steps-mail").hidden = false; $("#steps-direct").hidden = true;
+    $("#send-insta").className = "btn btn-ghost"; $("#send-insta").textContent = "Prefiro o Direct";
+    $("#send-mail").onclick = () => {
+      const nome = $("#f-nome").value.trim(), contato = $("#f-contato").value.trim();
+      if (!contato) { status.style.color = ""; status.textContent = "Coloque seu WhatsApp ou @ do Instagram para a gente te responder."; $("#f-contato").focus(); return; }
+      if (!$("#f-modelo").value.trim() && !$("#f-link").value.trim()) { status.textContent = "Conte o que você quer imprimir ou cole o link do arquivo."; $("#f-modelo").focus(); return; }
+      const b = $("#send-mail"); b.disabled = true; b.textContent = "Enviando…"; status.textContent = "";
+      fetch("https://formsubmit.co/ajax/" + C.email, {
+        method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({ _subject: "Novo pedido pelo site: " + (nome || "cliente"), _template: "box", _captcha: "false",
+          Nome: nome || "—", Contato: contato, Pedido: msg.textContent })
+      }).then(r => r.json()).then(d => {
+        if (String(d.success) !== "true") throw new Error(d.message || "erro");
+        status.textContent = "Pedido enviado! A RG vai te responder em breve no contato que você deixou.";
+        b.textContent = "Pedido enviado ✓";
+      }).catch(() => {
+        status.textContent = "Não deu para enviar agora. Toque em \"Prefiro o Direct\" para mandar pelo Instagram.";
+        b.disabled = false; b.textContent = "Enviar pedido";
+      });
+    };
+  }
 
   // ---------- Licenças ----------
   $("#conferido").textContent = C.conferido;
