@@ -1,7 +1,7 @@
 <meta charset="utf-8">
 <title>RG Marques 3D Studio</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Impressão 3D sob encomenda com envio pelos Correios para todo o Brasil. Chaveiros, presentes e peças úteis.">
+<meta name="description" content="Impressão 3D sob encomenda em até 4 cores, material PLA. Pagamento por Pix e entrega pelos Correios em São Paulo. Chaveiros, presentes e peças úteis.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112,800;125,900&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
@@ -189,6 +189,17 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
 .pix textarea { width: 100%; min-height: 84px; background: var(--bg-3); color: var(--fg); border: 1px solid var(--line); border-radius: 8px; padding: 10px; font: 12px var(--font-mono); resize: none; }
 .cart-count { background: var(--accent-ink); color: var(--accent); border-radius: 999px; padding: 1px 7px; font-size: 12px; }
 .steps-mini { margin: 0; padding-left: 18px; color: var(--fg-2); font-size: 14px; display: grid; gap: 4px; }
+.cupom { border-top: 1px solid var(--line); padding-top: 12px; display: grid; gap: 8px; }
+.cupom label { font-size: 14px; font-weight: 600; color: var(--fg-2); }
+.cupom-row { display: flex; gap: 8px; }
+.cupom-row input { flex: 1; min-width: 0; background: var(--bg); color: var(--fg); border: 1px solid var(--line); border-radius: 8px; padding: 11px 12px; font: 15px var(--font-body); text-transform: uppercase; }
+.cupom-row input:focus { border-color: var(--accent); outline: none; }
+.cupom-row .btn { flex: none; }
+.cupom .status { font-size: 13.5px; color: var(--ok); min-height: 1.2em; }
+dialog.orc { width: min(560px, calc(100vw - 24px)); }
+.orc-form { padding: 24px; display: grid; gap: 14px; }
+#pix-paguei { margin-top: 10px; }
+#paguei-msg, #orc-msg-status { font-size: 13.5px; color: var(--ok); min-height: 1.2em; }
 
 /* Como funciona */
 .how { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; counter-reset: s; }
@@ -242,9 +253,9 @@ footer img { height: 30px; }
 <main id="inicio">
   <div class="hero">
     <div class="wrap">
-      <div class="eyebrow">Impressão 3D sob encomenda · envio para todo o Brasil</div>
+      <div class="eyebrow">Impressão 3D sob encomenda · entrega em São Paulo</div>
       <h1>A peça que você imaginar, <em>impressa camada por camada.</em></h1>
-      <p class="lead">Chaveiros, presentes, brinquedos e peças úteis em até 4 cores. Escolha um modelo, as cores, pague com Pix e receba em casa pelos Correios.</p>
+      <p class="lead">Chaveiros, presentes, brinquedos e peças úteis em até 4 cores de uma vez. Escolha um modelo, as cores, pague com Pix e receba em casa pelos Correios (entrega em São Paulo).</p>
       <form class="search" id="heroSearch" role="search">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#151515" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         <input id="q" type="search" aria-label="Buscar modelo" placeholder="Busque: dragão, chaveiro, vaso..." autocomplete="off">
@@ -252,7 +263,7 @@ footer img { height: 30px; }
       </form>
       <div class="quick" id="quick">Mais buscados:</div>
       <div class="specline">
-        <span>pagamento por Pix</span><span>Bambu Lab A1 Combo</span><span>até 4 cores por peça</span><span>peças até 25,6 cm</span><span>PLA</span><span>envio pelos Correios</span>
+        <span>pagamento por Pix</span><span>até 4 cores de uma vez</span><span>material PLA</span><span>entrega em São Paulo</span>
       </div>
     </div>
   </div>
@@ -287,9 +298,18 @@ footer img { height: 30px; }
           <ul class="cart-list" id="cart-list"></ul>
           <p class="note" id="cart-empty">Seu carrinho está vazio. Toque em um modelo do <a href="#catalogo">catálogo</a>, escolha as cores e toque em <b>Adicionar ao carrinho</b>.</p>
           <div class="totals" id="totals"></div>
+          <div class="cupom" id="cupom-box" hidden>
+            <label for="cupom-cod">Tem um cupom?</label>
+            <div class="cupom-row">
+              <input id="cupom-cod" type="text" placeholder="Código do cupom" autocomplete="off" spellcheck="false">
+              <button class="btn btn-ghost" id="cupom-ap" type="button">Aplicar</button>
+            </div>
+            <div class="status" id="cupom-msg" aria-live="polite"></div>
+          </div>
           <div class="pag-info">
             <div class="eyebrow">Pagamento por Pix</div>
-            <p>Preencha o endereço e toque em <b>Pagar com Pix</b>. O QR Code e o código Pix copia e cola aparecem logo abaixo, com o valor certo do seu pedido.</p>
+            <p>Preencha o endereço e toque em <b>Pagar com Pix</b>. O QR Code e o código Pix copia e cola aparecem logo abaixo, com o valor certo do seu pedido. Entrega só em São Paulo (SP).</p>
+            <p>Pague sempre pelo app do seu banco e confira o nome <b>RG MARQUES 3D</b> antes de concluir. Depois é só tocar em <b>Já fiz o Pix</b>.</p>
             <p>Dúvidas? Fale com a gente pelo Instagram <a class="js-insta" target="_blank" rel="noopener"><b class="js-handle">@rg.marqs_3d</b></a>.</p>
           </div>
         </div>
@@ -329,7 +349,8 @@ footer img { height: 30px; }
           </div>
           <div class="field">
             <label for="c-uf">Estado (UF)</label>
-            <input id="c-uf" type="text" maxlength="2" autocomplete="address-level1" placeholder="SP">
+            <input id="c-uf" type="text" maxlength="2" autocomplete="address-level1" placeholder="SP" value="SP">
+            <small>No momento entregamos só no estado de São Paulo (SP).</small>
           </div>
           <div class="field full">
             <button class="btn btn-primary" id="c-pagar" type="submit">Pagar com Pix</button>
@@ -343,11 +364,27 @@ footer img { height: 30px; }
             <button class="btn btn-ghost" id="pix-copy" type="button">Copiar código Pix</button>
             <ol class="steps-mini" style="text-align:left">
               <li>Abra o app do seu banco e pague com o QR Code ou o "Pix copia e cola".</li>
-              <li>Assim que o pagamento cair, sua peça entra na impressora.</li>
-              <li>O código de rastreio dos Correios chega no seu e-mail.</li>
+              <li>Confira o nome <b>RG MARQUES 3D</b> antes de concluir o pagamento.</li>
+              <li>Toque em <b>Já fiz o Pix</b> abaixo para avisar a RG do seu pagamento.</li>
+              <li>Confirmado o Pix, começamos a produzir sua peça e enviamos pelos Correios (São Paulo), com o rastreio no seu e-mail.</li>
             </ol>
+            <button class="btn btn-primary" id="pix-paguei" type="button">Já fiz o Pix</button>
+            <div class="status" id="paguei-msg" aria-live="polite"></div>
           </div>
         </form>
+      </div>
+    </div>
+  </section>
+
+  <section id="orcamento" class="send" style="border-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <div class="eyebrow">Pedido especial</div>
+          <h2>Quer algo diferente ou um preço combinado?</h2>
+          <p>Peça personalizada, quantidade maior ou um valor especial? Conte o que você precisa. Olhamos caso a caso e, quando dá para fazer, retornamos pelo Instagram. Assim combinamos com calma e com segurança para os dois lados.</p>
+        </div>
+        <button class="btn btn-primary" id="orc-abrir" type="button">Pedir orçamento</button>
       </div>
     </div>
   </section>
@@ -358,8 +395,8 @@ footer img { height: 30px; }
       <ol class="how">
         <li><h3>Escolha</h3><p>Busque no catálogo, escolha as cores e ponha no carrinho.</p></li>
         <li><h3>Pague com Pix</h3><p>Preencha o endereço e pague o Pix gerado na hora, com o frete incluído.</p></li>
-        <li><h3>Impressão</h3><p>Pagamento confirmado, a peça entra na impressora com as cores que você escolheu.</p></li>
-        <li><h3>Entrega</h3><p>Enviamos pelos Correios para todo o Brasil e mandamos o rastreio por e-mail.</p></li>
+        <li><h3>Produção</h3><p>Pagamento confirmado, produzimos a peça em até 4 cores, com as cores que você escolheu, em PLA.</p></li>
+        <li><h3>Entrega</h3><p>Enviamos pelos Correios dentro de São Paulo e mandamos o rastreio por e-mail.</p></li>
       </ol>
     </div>
   </section>
@@ -373,14 +410,13 @@ footer img { height: 30px; }
         <p>Cada peça é impressa aqui, camada por camada, com acabamento conferido antes da entrega. Também criamos nossos próprios modelos, como o astronauta colorido e a linha de organizadores com nome.</p>
         <p>Todos os modelos de outros criadores do catálogo têm licença que permite vender a peça impressa, e o crédito de cada autor aparece na ficha do modelo.</p>
       </div>
-      <div class="machine" aria-label="Nossa impressora">
-        <div class="eyebrow">Na bancada</div>
-        <div class="row"><span>Impressora</span><span>Bambu Lab A1 Combo</span></div>
-        <div class="row"><span>Cores por peça</span><span>até 4 (AMS Lite)</span></div>
-        <div class="row"><span>Tamanho máximo</span><span>256 × 256 × 256 mm</span></div>
+      <div class="machine" aria-label="Como trabalhamos">
+        <div class="eyebrow">Como trabalhamos</div>
+        <div class="row"><span>Cores</span><span>até 4 de uma vez</span></div>
         <div class="row"><span>Material</span><span>PLA</span></div>
         <div class="row"><span>Pagamento</span><span>Pix</span></div>
-        <div class="row"><span>Entrega</span><span>Correios (todo o Brasil)</span></div>
+        <div class="row"><span>Entrega</span><span>Correios · São Paulo</span></div>
+        <div class="row"><span>Contato</span><span>Instagram <b class="js-handle">@rg.marqs_3d</b></span></div>
       </div>
     </div>
   </section>
@@ -399,7 +435,7 @@ footer img { height: 30px; }
 <footer>
   <div class="wrap">
     <img src="img/logo-horizontal-transparente.svg" alt="RG Marques 3D Studio">
-    <span>Envio pelos Correios · Instagram <b class="js-handle">@rg.marqs_3d</b></span>
+    <span>Entrega pelos Correios em São Paulo · Instagram <b class="js-handle">@rg.marqs_3d</b></span>
   </div>
 </footer>
 
@@ -427,6 +463,31 @@ footer img { height: 30px; }
   </div>
 </dialog>
 
+<dialog class="ficha orc" id="orc" aria-labelledby="orc-titulo">
+  <button class="close" id="orc-close" type="button" aria-label="Fechar">×</button>
+  <form class="orc-form" id="orc-form" novalidate>
+    <div class="eyebrow">Pedido especial</div>
+    <h2 id="orc-titulo">Conte o que você precisa</h2>
+    <p class="note">Não feche negócio por aqui. A gente lê o seu pedido e, se der para fazer, te chama no Instagram para combinar o preço e o pagamento com segurança.</p>
+    <div class="field full">
+      <label for="orc-nome">Seu nome</label>
+      <input id="orc-nome" type="text" autocomplete="name">
+    </div>
+    <div class="field full">
+      <label for="orc-contato">Seu Instagram (@) ou e-mail</label>
+      <input id="orc-contato" type="text" placeholder="@seu_instagram ou voce@email.com" autocomplete="off">
+    </div>
+    <div class="field full">
+      <label for="orc-msg">O que você quer</label>
+      <textarea id="orc-msg" rows="4" placeholder="Ex.: 20 chaveiros com o nome da empresa, nas cores preto e laranja."></textarea>
+    </div>
+    <div class="ficha-actions">
+      <button class="btn btn-primary" id="orc-enviar" type="submit">Enviar pedido</button>
+    </div>
+    <div class="status" id="orc-msg-status" aria-live="polite"></div>
+  </form>
+</dialog>
+
 <script src="catalogo.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
@@ -449,6 +510,26 @@ footer img { height: 30px; }
       foto: (window.FOTOS || {})[id] ? "https://media.printables.com/" + window.FOTOS[id] : ""
     })));
   itens.forEach(i => { i.busca = norm([i.nome, i.tags, i.cat.map(catNome).join(" "), i.autor].join(" ")); });
+
+  // ---------- Preços da planilha (você edita na aba "Produtos", sem mexer em código) ----------
+  const porId = {}; itens.forEach(i => { porId[i.id] = i; });
+  function aplicarPrecos(mapa) {
+    if (!mapa) return false;
+    let mud = false;
+    for (const id in mapa) { const p = +mapa[id]; if (porId[id] && p > 0 && porId[id].preco !== p) { porId[id].preco = p; mud = true; } }
+    return mud;
+  }
+  aplicarPrecos(window.PRECOS);
+  try { aplicarPrecos(JSON.parse(localStorage.getItem("rg-precos") || "null")); } catch (e) {}
+  function buscarPrecos() {
+    if (!C.painel) return;
+    fetch(C.painel + "?acao=precos", { cache: "no-store" }).then(r => r.json()).then(d => {
+      if (d && d.ok && d.precos) {
+        try { localStorage.setItem("rg-precos", JSON.stringify(d.precos)); } catch (e) {}
+        if (aplicarPrecos(d.precos)) { renderGrid(); renderCart(); }
+      }
+    }).catch(() => {});
+  }
 
   // Ilustração para modelos sem prévia 3D: silhueta da categoria sobre linhas de camada
   const ICON = {
@@ -675,10 +756,19 @@ footer img { height: 30px; }
   try { cart = JSON.parse(localStorage.getItem("rg-cart") || "[]"); } catch (e) { cart = []; }
   const salvar = () => { try { localStorage.setItem("rg-cart", JSON.stringify(cart)); } catch (e) {} };
   const FR = C.frete || { valor: 0, gratisAcima: 0 };
+  let cupom = null;
+  try { cupom = JSON.parse(localStorage.getItem("rg-cupom") || "null"); } catch (e) {}
+  const descontoDe = sub => {
+    if (!cupom || !(cupom.valor > 0)) return 0;
+    let d = cupom.tipo === "%" ? sub * cupom.valor / 100 : cupom.valor;
+    if (d > sub) d = sub;
+    return Math.round(d * 100) / 100;
+  };
   const totais = () => {
     const sub = cart.reduce((s, c) => s + c.preco * c.qtd, 0);
+    const desc = descontoDe(sub);
     const frete = !cart.length ? 0 : (FR.gratisAcima && sub >= FR.gratisAcima ? 0 : FR.valor);
-    return { sub, frete, total: sub + frete };
+    return { sub, desc, frete, total: Math.max(0, sub - desc + frete) };
   };
   function renderCart() {
     $("#cart-count").textContent = cart.reduce((s, c) => s + c.qtd, 0);
@@ -688,10 +778,50 @@ footer img { height: 30px; }
       <div class="qty"><button type="button" data-k="${k}" data-d="-1" aria-label="Menos">−</button>${c.qtd}<button type="button" data-k="${k}" data-d="1" aria-label="Mais">+</button></div></li>`).join("");
     const t = totais();
     $("#totals").innerHTML = cart.length ? `<div><span>Peças</span><span>${brl(t.sub)}</span></div>
+      ${t.desc ? `<div style="color:var(--ok)"><span>Desconto${cupom && cupom.codigo ? " (" + esc(cupom.codigo) + ")" : ""}</span><span>− ${brl(t.desc)}</span></div>` : ""}
       <div><span>Frete (Correios)</span><span>${t.frete ? brl(t.frete) : "grátis"}</span></div>
       ${FR.gratisAcima && t.frete ? `<div class="det" style="color:var(--fg-3);font-size:12.5px">Frete grátis a partir de ${brl(FR.gratisAcima)} em peças.</div>` : ""}
       <div class="tot"><span>Total</span><span>${brl(t.total)}</span></div>` : "";
+    atualizarCupomUI();
   }
+  function atualizarCupomUI() {
+    const box = $("#cupom-box"); if (!box) return;
+    box.hidden = !C.painel || !cart.length;
+    const ap = $("#cupom-ap"), inp = $("#cupom-cod"), msg = $("#cupom-msg");
+    if (cupom && cupom.codigo) {
+      if (document.activeElement !== inp) inp.value = cupom.codigo;
+      ap.textContent = "Remover";
+      msg.style.color = "var(--ok)";
+      msg.textContent = "Cupom " + cupom.codigo + " aplicado" + (cupom.tipo === "%" ? " (" + cupom.valor + "% off)" : " (− " + brl(cupom.valor) + ")") + ".";
+    } else {
+      ap.textContent = "Aplicar";
+    }
+  }
+  $("#cupom-ap").onclick = () => {
+    const inp = $("#cupom-cod"), msg = $("#cupom-msg"), ap = $("#cupom-ap");
+    if (cupom && cupom.codigo) {
+      cupom = null; try { localStorage.removeItem("rg-cupom"); } catch (e) {}
+      inp.value = ""; msg.textContent = ""; renderCart(); return;
+    }
+    const code = (inp.value || "").trim().toUpperCase();
+    if (!code) { msg.style.color = "var(--accent)"; msg.textContent = "Digite o código do cupom."; return; }
+    if (!C.painel) { msg.style.color = "var(--accent)"; msg.textContent = "Cupom indisponível no momento."; return; }
+    const sub = cart.reduce((s, c) => s + c.preco * c.qtd, 0);
+    ap.disabled = true; ap.textContent = "…"; msg.style.color = "var(--fg-2)"; msg.textContent = "Conferindo…";
+    fetch(C.painel + "?acao=cupom&codigo=" + encodeURIComponent(code) + "&subtotal=" + sub, { cache: "no-store" })
+      .then(r => r.json()).then(d => {
+        ap.disabled = false;
+        if (d && d.ok) {
+          cupom = { codigo: d.codigo, tipo: d.tipo === "%" ? "%" : "reais", valor: +d.valor };
+          try { localStorage.setItem("rg-cupom", JSON.stringify(cupom)); } catch (e) {}
+          renderCart();
+        } else {
+          ap.textContent = "Aplicar";
+          msg.style.color = "var(--accent)";
+          msg.textContent = d && d.erro === "inativo" ? "Esse cupom não está mais ativo." : "Cupom não encontrado.";
+        }
+      }).catch(() => { ap.disabled = false; ap.textContent = "Aplicar"; msg.style.color = "var(--accent)"; msg.textContent = "Não deu para conferir agora. Tente de novo."; });
+  };
   $("#cart-list").addEventListener("click", e => {
     const b = e.target.closest("[data-k]"); if (!b) return;
     const c = cart[+b.dataset.k]; c.qtd += +b.dataset.d;
@@ -726,6 +856,7 @@ footer img { height: 30px; }
   }
 
   const status = $("#status");
+  let ultimoPedido = null;
   $("#checkout").addEventListener("submit", e => {
     e.preventDefault();
     const v = id => $(id).value.trim();
@@ -735,6 +866,8 @@ footer img { height: 30px; }
     }
     if (!/^\S+@\S+\.\S+$/.test(v("#c-email"))) { status.textContent = "Confira o e-mail."; $("#c-email").focus(); return; }
     if (v("#c-cep").replace(/\D/g, "").length !== 8) { status.textContent = "O CEP tem 8 números."; $("#c-cep").focus(); return; }
+    if (v("#c-uf").toUpperCase() !== "SP") { status.textContent = "Por enquanto entregamos só no estado de São Paulo (SP)."; $("#c-uf").focus(); return; }
+    if (+v("#c-cep").replace(/\D/g, "").slice(0, 2) > 19) { status.textContent = "Esse CEP não parece ser de São Paulo. Confira o CEP."; $("#c-cep").focus(); return; }
     if (!C.pix || !C.pix.chave) { status.textContent = "O pagamento por Pix ainda está sendo ativado. Volte em breve!"; return; }
     const t = totais();
     const cod = "RG" + Date.now().toString(36).toUpperCase().slice(-6);
@@ -745,21 +878,25 @@ footer img { height: 30px; }
     const b = $("#c-pagar"); b.disabled = true; b.textContent = "Gerando Pix…"; status.textContent = "";
     const mostrarPix = () => {
       enviarPainel();
+      ultimoPedido = { cod, total: t.total, nome: v("#c-nome"), email: v("#c-email") };
       $("#pix-cod").textContent = cod; $("#pix-valor").textContent = "Pague " + brl(t.total);
       $("#pix-code").value = code; $("#pix-qr").innerHTML = "";
       if (window.QRCode) new QRCode($("#pix-qr"), { text: code, width: 220, height: 220, correctLevel: QRCode.CorrectLevel.M });
-      $("#pix-box").hidden = false; b.hidden = true; $("#pix-box").scrollIntoView({ block: "center" });
+      $("#pix-box").hidden = false; $("#pix-paguei").disabled = false; $("#pix-paguei").textContent = "Já fiz o Pix"; $("#paguei-msg").textContent = "";
+      b.hidden = true; $("#pix-box").scrollIntoView({ block: "center" });
+      cupom = null; try { localStorage.removeItem("rg-cupom"); } catch (e) {}
       cart = []; salvar(); renderCart();
     };
-    const painelBody = JSON.stringify({ codigo: cod, total: t.total, frete: t.frete, nome: v("#c-nome"), email: v("#c-email"), endereco,
+    const painelBody = JSON.stringify({ codigo: cod, total: t.total, frete: t.frete, cupom: cupom ? cupom.codigo : "", desconto: t.desc || 0, nome: v("#c-nome"), email: v("#c-email"), endereco,
       itens: cart.map(c => ({ id: c.id, nome: c.nome, cores: c.cores, preco: c.preco, qtd: c.qtd, img: abs(c.img), link: abs(c.link) })) });
     const enviarPainel = () => { if (C.painel) fetch(C.painel, { method: "POST", mode: "no-cors", keepalive: true, headers: { "Content-Type": "text/plain;charset=utf-8" }, body: painelBody }).catch(() => {}); };
     if (!C.email) { mostrarPix(); return; }
     const aviso = fetch("https://formsubmit.co/ajax/" + C.email, {
       method: "POST", keepalive: true, headers: { "Content-Type": "application/json", "Accept": "application/json" },
       body: JSON.stringify({ _subject: `Pedido ${cod} - ${brl(t.total)} (aguardando Pix)`, _template: "box", _captcha: "false",
-        _autoresponse: `Recebemos seu pedido ${cod} na RG Marques 3D! Total: ${brl(t.total)}. Assim que o Pix for confirmado, sua peça entra na impressora e enviamos o código de rastreio dos Correios para este e-mail.`,
+        _autoresponse: `Recebemos seu pedido ${cod} na RG Marques 3D! Total: ${brl(t.total)}. Assim que o Pix for confirmado, começamos a produzir sua peça e enviamos o código de rastreio dos Correios (São Paulo) para este e-mail.`,
         Pedido: cod, Total: brl(t.total), Itens: itensTxt, Frete: t.frete ? brl(t.frete) : "grátis",
+        Cupom: cupom ? (cupom.codigo + (t.desc ? " (− " + brl(t.desc) + ")" : "")) : "não",
         Nome: v("#c-nome"), email: v("#c-email"), Endereco: endereco })
     });
     // Com o painel ligado, o pedido já vai para a planilha: mostra o Pix na hora e o e-mail segue em segundo plano
@@ -779,6 +916,42 @@ footer img { height: 30px; }
     else { ta.select(); document.execCommand && document.execCommand("copy"); ok(); }
   };
 
+  // "Já fiz o Pix": avisa a RG (painel + e-mail) para ela conferir no banco
+  $("#pix-paguei").onclick = () => {
+    const btn = $("#pix-paguei"), msg = $("#paguei-msg");
+    if (!ultimoPedido) { msg.style.color = "var(--accent)"; msg.textContent = "Gere o Pix primeiro."; return; }
+    btn.disabled = true; btn.textContent = "Avisando…";
+    if (C.painel) fetch(C.painel, { method: "POST", mode: "no-cors", keepalive: true, headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ tipo: "aviso", codigo: ultimoPedido.cod }) }).catch(() => {});
+    const fim = () => { msg.style.color = "var(--ok)"; msg.textContent = "Avisado! Assim que confirmarmos o Pix, começamos a produzir. Obrigado!"; btn.textContent = "Aviso enviado ✓"; };
+    if (C.email) {
+      fetch("https://formsubmit.co/ajax/" + C.email, { method: "POST", keepalive: true, headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({ _subject: `Cliente avisou pagamento - pedido ${ultimoPedido.cod}`, _captcha: "false", _template: "box",
+          Pedido: ultimoPedido.cod, Total: brl(ultimoPedido.total), Cliente: ultimoPedido.nome || "", email: ultimoPedido.email || "",
+          Aviso: "O cliente informou que fez o Pix. Confira o recebimento no app do banco antes de produzir." }) })
+        .then(() => fim()).catch(() => fim());
+    } else fim();
+  };
+
+  // Pedido especial / orçamento
+  const orc = $("#orc");
+  $("#orc-abrir").onclick = () => { $("#orc-msg-status").textContent = ""; orc.showModal(); $("#orc-nome").focus(); };
+  $("#orc-close").onclick = () => orc.close();
+  orc.addEventListener("click", e => { if (e.target === orc) orc.close(); });
+  $("#orc-form").addEventListener("submit", e => {
+    e.preventDefault();
+    const st = $("#orc-msg-status");
+    const nome = $("#orc-nome").value.trim(), contato = $("#orc-contato").value.trim(), mensagem = $("#orc-msg").value.trim();
+    if (!nome || !contato || !mensagem) { st.style.color = "var(--accent)"; st.textContent = "Preencha nome, contato e o que você quer."; return; }
+    const b = $("#orc-enviar"); b.disabled = true; b.textContent = "Enviando…"; st.style.color = "var(--fg-2)"; st.textContent = "";
+    if (C.painel) fetch(C.painel, { method: "POST", mode: "no-cors", keepalive: true, headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ tipo: "especial", nome, contato, mensagem }) }).catch(() => {});
+    const fim = () => { st.style.color = "var(--ok)"; st.textContent = "Enviado! Se der para fazer, a gente te chama no Instagram."; b.disabled = false; b.textContent = "Enviar pedido"; $("#orc-form").reset(); };
+    if (C.email) {
+      fetch("https://formsubmit.co/ajax/" + C.email, { method: "POST", keepalive: true, headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({ _subject: "Pedido especial - site RG Marques 3D", _template: "box", _captcha: "false", Nome: nome, Contato: contato, Pedido: mensagem }) })
+        .then(() => fim()).catch(() => fim());
+    } else fim();
+  });
+
   // Link de ativação do FormSubmit: abra o site com ?ativar no fim do endereço
   if (C.email && /[?&]ativar\b/.test(location.search)) {
     fetch("https://formsubmit.co/ajax/" + C.email, {
@@ -797,6 +970,6 @@ footer img { height: 30px; }
   $("#lic-body").innerHTML = itens.filter(i => !i.proprio).map(i =>
     `<tr><td>${esc(i.nome)}</td><td>${esc(i.autor)}</td><td><a href="${LIC_URL[i.lic]}" target="_blank" rel="noopener">${i.lic}</a></td><td><a href="${i.url}" target="_blank" rel="noopener">Printables</a></td></tr>`).join("");
 
-  renderFiltros(); renderGrid();
+  renderFiltros(); renderGrid(); buscarPrecos();
 })();
 </script>
