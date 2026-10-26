@@ -6,8 +6,7 @@
 window.CONFIG = {
   instagram: "rg.marqs_3d",      // @ do Instagram (sem o @)
   whatsapp: "",                  // deixe vazio para esconder o botão de WhatsApp
-  email: "",                     // e-mail que recebe os pedidos do site (vazio = só Direct)
-  bairro: "Penha de França, São Paulo (SP)",
+  email: "rafael.g.marques.17@gmail.com", // e-mail que recebe os pedidos do site (vazio = só Direct)
   conferido: "26/10/2026"
 };
 

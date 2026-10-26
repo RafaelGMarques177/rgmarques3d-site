@@ -1,7 +1,7 @@
 <meta charset="utf-8">
 <title>RG Marques 3D Studio</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Impressão 3D sob encomenda na Penha de França, São Paulo. Chaveiros, presentes e peças úteis.">
+<meta name="description" content="Impressão 3D sob encomenda com envio pelos Correios para todo o Brasil. Chaveiros, presentes e peças úteis.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112,800;125,900&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
@@ -216,14 +216,14 @@ footer img { height: 30px; }
       <a href="#como">Como funciona</a>
       <a href="#quem">Quem somos</a>
     </nav>
-    <a class="btn btn-primary js-insta" href="#envie" target="_blank" rel="noopener">Orçamento no Direct</a>
+    <a class="btn btn-primary" href="#envie">Fazer pedido</a>
   </div>
 </header>
 
 <main id="inicio">
   <div class="hero">
     <div class="wrap">
-      <div class="eyebrow">Impressão 3D sob encomenda · Penha de França, SP</div>
+      <div class="eyebrow">Impressão 3D sob encomenda · envio para todo o Brasil</div>
       <h1>A peça que você imaginar, <em>impressa camada por camada.</em></h1>
       <p class="lead">Chaveiros, presentes, brinquedos e peças úteis em até 4 cores. Escolha um modelo do catálogo ou mande o seu, e a gente imprime para você.</p>
       <form class="search" id="heroSearch" role="search">
@@ -233,7 +233,7 @@ footer img { height: 30px; }
       </form>
       <div class="quick" id="quick">Mais buscados:</div>
       <div class="specline">
-        <span>Bambu Lab A1 Combo</span><span>até 4 cores por peça</span><span>peças até 25,6 cm</span><span>PLA</span><span>entrega em mãos ou Correios</span>
+        <span>Bambu Lab A1 Combo</span><span>até 4 cores por peça</span><span>peças até 25,6 cm</span><span>PLA</span><span>envio pelos Correios</span>
       </div>
     </div>
   </div>
@@ -300,16 +300,10 @@ footer img { height: 30px; }
             <label for="f-cores">Cores</label>
             <input id="f-cores" type="text" placeholder="Ex.: preto e laranja">
           </div>
-          <fieldset class="field full">
-            <legend>Entrega</legend>
-            <div class="radios">
-              <label><input type="radio" name="entrega" value="Retirar / entrega em mãos na Penha" checked> Em mãos (Penha e região)</label>
-              <label><input type="radio" name="entrega" value="Correios"> Correios</label>
-            </div>
-          </fieldset>
-          <div class="field full" id="cep-field" hidden>
-            <label for="f-cep">CEP</label>
+          <div class="field full" id="cep-field">
+            <label for="f-cep">CEP para o envio</label>
             <input id="f-cep" type="text" inputmode="numeric" placeholder="00000-000" autocomplete="postal-code">
+            <small>A entrega é pelos Correios. Com o CEP a gente já calcula o frete.</small>
           </div>
         </form>
         <div class="msg-box">
@@ -344,7 +338,7 @@ footer img { height: 30px; }
         <li><h3>Escolha</h3><p>Busque no catálogo ou mande o link do seu modelo.</p></li>
         <li><h3>Orçamento</h3><p>Você manda a mensagem no Direct e recebe preço e prazo.</p></li>
         <li><h3>Impressão</h3><p>Pagou o Pix, a peça entra na impressora com as cores que você escolheu.</p></li>
-        <li><h3>Entrega</h3><p>Em mãos na Penha de França e região, ou pelos Correios para todo o Brasil.</p></li>
+        <li><h3>Entrega</h3><p>Enviamos pelos Correios para todo o Brasil.</p></li>
       </ol>
     </div>
   </section>
@@ -354,7 +348,7 @@ footer img { height: 30px; }
       <div>
         <div class="eyebrow">Quem somos</div>
         <h2 style="font-size:clamp(28px,4vw,40px);margin:6px 0 16px">RG Marques 3D Studio</h2>
-        <p>Somos um estúdio de impressão 3D da <strong>Penha de França, em São Paulo</strong>. Começamos com chaveiros para amigos e para a creche do bairro, e hoje fazemos presentes, brinquedos, organizadores e peças sob medida.</p>
+        <p>Somos um estúdio de impressão 3D. Começamos com chaveiros para amigos e para uma creche, e hoje fazemos presentes, brinquedos, organizadores e peças sob medida.</p>
         <p>Cada peça é impressa aqui, camada por camada, com acabamento conferido antes da entrega. Também criamos nossos próprios modelos, como o astronauta colorido e a linha de organizadores com nome.</p>
         <p>Todos os modelos de outros criadores do catálogo têm licença que permite vender a peça impressa, e o crédito de cada autor aparece na ficha do modelo.</p>
       </div>
@@ -365,7 +359,7 @@ footer img { height: 30px; }
         <div class="row"><span>Tamanho máximo</span><span>256 × 256 × 256 mm</span></div>
         <div class="row"><span>Material</span><span>PLA</span></div>
         <div class="row"><span>Pagamento</span><span>Pix</span></div>
-        <div class="row"><span>Entrega</span><span>em mãos ou Correios</span></div>
+        <div class="row"><span>Entrega</span><span>Correios (todo o Brasil)</span></div>
       </div>
     </div>
   </section>
@@ -384,7 +378,7 @@ footer img { height: 30px; }
 <footer>
   <div class="wrap">
     <img src="img/logo-horizontal-transparente.svg" alt="RG Marques 3D Studio">
-    <span>Penha de França, São Paulo (SP) · Instagram <b class="js-handle">@rg.marqs_3d</b></span>
+    <span>Envio pelos Correios · Instagram <b class="js-handle">@rg.marqs_3d</b></span>
   </div>
 </footer>
 
@@ -639,7 +633,6 @@ footer img { height: 30px; }
   const form = $("#pedido"), msg = $("#msg"), status = $("#status");
   function montarMsg() {
     const v = id => $(id).value.trim();
-    const entrega = (form.querySelector('[name="entrega"]:checked') || {}).value || "";
     const linhas = ["Olá, RG Marques 3D! Quero um orçamento:", ""];
     linhas.push("Nome: " + (v("#f-nome") || "—"));
     if (v("#f-contato")) linhas.push("Contato: " + v("#f-contato"));
@@ -648,11 +641,10 @@ footer img { height: 30px; }
     linhas.push("Tamanho: " + v("#f-tam"));
     linhas.push("Cores: " + (v("#f-cores") || "a combinar"));
     linhas.push("Quantidade: " + (v("#f-qtd") || "1"));
-    linhas.push("Entrega: " + entrega + (entrega === "Correios" && v("#f-cep") ? " (CEP " + v("#f-cep") + ")" : ""));
+    linhas.push("Entrega: Correios" + (v("#f-cep") ? " (CEP " + v("#f-cep") + ")" : ""));
     return linhas.join("\n");
   }
   function atualizarMsg() {
-    $("#cep-field").hidden = ((form.querySelector('[name="entrega"]:checked') || {}).value !== "Correios");
     msg.textContent = montarMsg();
     if (C.whatsapp) $("#send-wa").href = "https://wa.me/" + C.whatsapp + "?text=" + encodeURIComponent(msg.textContent);
   }
