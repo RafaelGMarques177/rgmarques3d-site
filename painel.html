@@ -78,8 +78,9 @@ h1 span { color: var(--accent); }
 <body>
 <form class="login wrap" id="login" hidden>
   <h1>Painel <span style="color:var(--accent)">RG</span> Marques 3D</h1>
-  <p class="sub">Digite a senha que você colocou no código da planilha.</p>
+  <p class="sub" id="login-txt">Digite a senha do painel.</p>
   <input type="password" id="senha" autocomplete="current-password" aria-label="Senha do painel" required>
+  <input type="password" id="senha2" autocomplete="new-password" aria-label="Repita a senha" placeholder="Repita a senha" hidden>
   <label class="ck"><input type="checkbox" id="lembrar" checked> Lembrar neste aparelho</label>
   <button class="btn primary" type="submit" id="entrar">Entrar</button>
   <p class="msg" id="login-msg"></p>
@@ -198,7 +199,8 @@ function item(i) {
 }
 
 function erroTxt(e) {
-  if (e && e.code === "senha") return "Senha errada. Confira a senha que está no código da planilha.";
+  if (e && e.code === "senha") return "Senha errada.";
+  if (e && e.code === "curta") return "A senha precisa ter pelo menos 8 letras ou números.";
   if (!API) return "O site ainda não está ligado à planilha.";
   return "Não foi possível falar com a planilha agora. Confira a internet e toque em Atualizar.";
 }
@@ -214,6 +216,7 @@ async function carregar() {
     return true;
   } catch (e) {
     if (e.code === "senha") { sair(erroTxt(e)); return false; }
+    if (e.code === "sem_senha") { modoCriar(); return false; }
     aviso(erroTxt(e), true);
     return false;
   } finally { $("#atualizar").disabled = false; }
@@ -236,8 +239,25 @@ async function entrar() {
   if (await carregar()) { clearInterval(window._t); window._t = setInterval(() => { if (!document.hidden && senha) carregar(); }, 120000); }
 }
 
-$("#login").addEventListener("submit", e => {
+let criando = false;
+function modoCriar() {
+  criando = true; senha = "";
+  $("#app").hidden = true; $("#login").hidden = false;
+  $("#login-txt").textContent = "Primeiro acesso: crie a senha do painel (pelo menos 8 letras ou números). Só você vai saber.";
+  $("#senha").autocomplete = "new-password"; $("#senha2").hidden = false; $("#entrar").textContent = "Criar senha e entrar";
+}
+
+$("#login").addEventListener("submit", async e => {
   e.preventDefault();
+  if (criando) {
+    const a = $("#senha").value.trim(), b = $("#senha2").value.trim();
+    if (a.length < 8) { $("#login-msg").textContent = erroTxt({ code: "curta" }); return; }
+    if (a !== b) { $("#login-msg").textContent = "As duas senhas não estão iguais."; return; }
+    senha = a; $("#entrar").disabled = true;
+    try { await api({ acao: "criar" }); }
+    catch (err) { $("#entrar").disabled = false; $("#login-msg").textContent = err.code === "senha" ? "Já existe uma senha criada. Digite a senha." : erroTxt(err); if (err.code === "senha") { criando = false; $("#senha2").hidden = true; $("#entrar").textContent = "Entrar"; } return; }
+    criando = false; $("#senha2").hidden = true; $("#entrar").disabled = false; $("#entrar").textContent = "Entrar";
+  }
   senha = $("#senha").value.trim();
   if ($("#lembrar").checked) { try { localStorage.setItem("rg-painel-senha", senha); } catch (err) {} }
   entrar();
@@ -280,7 +300,8 @@ document.addEventListener("click", async e => {
 $("#atualizar").onclick = () => carregar();
 
 if (!API) { $("#login").hidden = false; $("#login-msg").textContent = "O site ainda não está ligado à planilha. Falta colocar o link do Apps Script no catalogo.js."; $("#entrar").disabled = true; }
-else if (senha) entrar(); else sair("");
+else if (senha) entrar();
+else api({ acao: "listar" }).catch(e => { if (e.code === "sem_senha") modoCriar(); else sair(""); });
 </script>
 </body>
 </html>
