@@ -124,6 +124,8 @@ dialog.ficha::backdrop { background: rgba(0,0,0,.7); }
 .viewer .hint { position: absolute; bottom: 10px; left: 0; right: 0; text-align: center; font: 500 12px var(--font-mono); color: #5C5A55; pointer-events: none; }
 .viewer .ill { position: absolute; inset: 0; display: grid; place-items: center; }
 .viewer .ill svg { width: 70%; height: 70%; }
+.viewer .pecas-btn { position: absolute; top: 10px; left: 10px; z-index: 2; border: 0; border-radius: 999px; padding: 8px 14px; background: #151515; color: #fff; font: 600 13px var(--font-body, inherit); cursor: pointer; }
+.viewer .pecas-btn:hover { background: #F26B1D; }
 .viewer .loading { position: absolute; inset: 0; display: grid; place-items: center; color: #5C5A55; font: 500 13px var(--font-mono); }
 .ficha-info { padding: 22px; overflow-y: auto; display: grid; gap: 16px; align-content: start; min-width: 0; }
 .ficha-info h2 { font-size: 26px; }
@@ -624,9 +626,38 @@ footer img { height: 30px; }
       group.position.sub(c);
       camera.position.set(s * 0.55, s * 0.5, s * 1.05); camera.near = s / 100; camera.far = s * 20; camera.updateProjectionMatrix();
       controls.target.set(0, 0, 0); controls.update();
+      if (meshes.length > 1) montarPecas(st, s);
     }).catch(() => { if (v3 === st) load.textContent = "Não foi possível carregar a prévia 3D."; });
-    const tick = () => { st.raf = requestAnimationFrame(tick); controls.update(); renderer.render(scene, camera); };
+    const tick = () => { st.raf = requestAnimationFrame(tick); animarPecas(st); controls.update(); renderer.render(scene, camera); };
     tick();
+  }
+
+  // "Ver em peças": espalha as peças lado a lado na mesa, como saem da impressora
+  function montarPecas(st, s) {
+    const caixas = st.meshes.map(m => { m.geometry.computeBoundingBox(); return m.geometry.boundingBox; });
+    const tudo = new THREE.Box3(); caixas.forEach(b => tudo.union(b));
+    const meio = tudo.getCenter(new THREE.Vector3()), minZ = tudo.min.z, gap = s * 0.08;
+    const larg = caixas.reduce((t, b) => t + (b.max.x - b.min.x), 0) + gap * (caixas.length - 1);
+    let x = -larg / 2;
+    st.alvo = caixas.map(b => {
+      const v = new THREE.Vector3(meio.x + x - b.min.x, meio.y - (b.min.y + b.max.y) / 2, minZ - b.min.z);
+      x += (b.max.x - b.min.x) + gap; return v;
+    });
+    st.zoom = Math.max(1.3, larg / s * 1.7); st.t = 0; st.pecas = false;
+    st.base = st.camera.position.clone();
+    const btn = document.createElement("button"); btn.type = "button"; btn.className = "pecas-btn"; btn.textContent = "Ver em peças";
+    btn.onclick = () => { st.pecas = !st.pecas; btn.textContent = st.pecas ? "Ver montado" : "Ver em peças"; };
+    viewerEl.appendChild(btn);
+  }
+  function animarPecas(st) {
+    if (!st.alvo) return;
+    const fim = st.pecas ? 1 : 0;
+    if (Math.abs(st.t - fim) < 0.001) return;
+    st.t += (fim - st.t) * 0.12; if (Math.abs(st.t - fim) < 0.002) st.t = fim;
+    const e = st.t * st.t * (3 - 2 * st.t);
+    st.meshes.forEach((m, k) => m.position.copy(st.alvo[k]).multiplyScalar(e));
+    const dist = st.base.length() * (1 + (st.zoom - 1) * e);
+    st.camera.position.setLength(dist);
   }
 
   $("#ficha-close").onclick = () => ficha.close();
@@ -703,14 +734,19 @@ footer img { height: 30px; }
     const endereco = `${v("#c-rua")}, ${v("#c-num")}${v("#c-comp") ? " - " + v("#c-comp") : ""} - ${v("#c-bairro")} - ${v("#c-cidade")}/${v("#c-uf").toUpperCase()} - CEP ${v("#c-cep")}`;
     const itensTxt = cart.map(c => `${c.qtd}x ${c.nome} (${c.cores}) = ${brl(c.preco * c.qtd)}${c.link ? " | " + c.link : ""}`).join("\n");
     const code = pixPayload(t.total, cod);
+    const abs = u => { try { return u ? new URL(u, location.href).href : ""; } catch (e) { return ""; } };
     const b = $("#c-pagar"); b.disabled = true; b.textContent = "Gerando Pix…"; status.textContent = "";
     const mostrarPix = () => {
+      enviarPainel();
       $("#pix-cod").textContent = cod; $("#pix-valor").textContent = "Pague " + brl(t.total);
       $("#pix-code").value = code; $("#pix-qr").innerHTML = "";
       if (window.QRCode) new QRCode($("#pix-qr"), { text: code, width: 220, height: 220, correctLevel: QRCode.CorrectLevel.M });
       $("#pix-box").hidden = false; b.hidden = true; $("#pix-box").scrollIntoView({ block: "center" });
       cart = []; salvar(); renderCart();
     };
+    const painelBody = JSON.stringify({ codigo: cod, total: t.total, frete: t.frete, nome: v("#c-nome"), email: v("#c-email"), endereco,
+      itens: cart.map(c => ({ id: c.id, nome: c.nome, cores: c.cores, preco: c.preco, qtd: c.qtd, img: abs(c.img), link: abs(c.link) })) });
+    const enviarPainel = () => { if (C.painel) fetch(C.painel, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: painelBody }).catch(() => {}); };
     if (!C.email) { mostrarPix(); return; }
     fetch("https://formsubmit.co/ajax/" + C.email, {
       method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" },

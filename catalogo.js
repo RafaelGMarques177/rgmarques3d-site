@@ -7,6 +7,7 @@ window.CONFIG = {
   instagram: "rg.marqs_3d",      // @ do Instagram (sem o @)
   whatsapp: "",                  // deixe vazio para esconder o botão de WhatsApp
   email: "rafael.g.marques.17@gmail.com", // e-mail que recebe os pedidos do site
+  painel: "", // endereço do Apps Script que grava os pedidos na planilha (painel do dono)
   pix: { chave: "c644a05a-62be-4900-914b-d5fb68f0a53c", nome: "RG MARQUES 3D", cidade: "SAO PAULO" },  // chave Pix que recebe os pagamentos
   frete: { valor: 20, gratisAcima: 150 },  // frete fixo dos Correios (R$) e frete grátis a partir de (R$)
   conferido: "26/10/2026"
