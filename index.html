@@ -753,19 +753,21 @@ footer img { height: 30px; }
     };
     const painelBody = JSON.stringify({ codigo: cod, total: t.total, frete: t.frete, nome: v("#c-nome"), email: v("#c-email"), endereco,
       itens: cart.map(c => ({ id: c.id, nome: c.nome, cores: c.cores, preco: c.preco, qtd: c.qtd, img: abs(c.img), link: abs(c.link) })) });
-    const enviarPainel = () => { if (C.painel) fetch(C.painel, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: painelBody }).catch(() => {}); };
+    const enviarPainel = () => { if (C.painel) fetch(C.painel, { method: "POST", mode: "no-cors", keepalive: true, headers: { "Content-Type": "text/plain;charset=utf-8" }, body: painelBody }).catch(() => {}); };
     if (!C.email) { mostrarPix(); return; }
-    fetch("https://formsubmit.co/ajax/" + C.email, {
-      method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" },
+    const aviso = fetch("https://formsubmit.co/ajax/" + C.email, {
+      method: "POST", keepalive: true, headers: { "Content-Type": "application/json", "Accept": "application/json" },
       body: JSON.stringify({ _subject: `Pedido ${cod} - ${brl(t.total)} (aguardando Pix)`, _template: "box", _captcha: "false",
         _autoresponse: `Recebemos seu pedido ${cod} na RG Marques 3D! Total: ${brl(t.total)}. Assim que o Pix for confirmado, sua peça entra na impressora e enviamos o código de rastreio dos Correios para este e-mail.`,
         Pedido: cod, Total: brl(t.total), Itens: itensTxt, Frete: t.frete ? brl(t.frete) : "grátis",
         Nome: v("#c-nome"), email: v("#c-email"), Endereco: endereco })
-    }).then(r => r.json()).then(d => {
+    });
+    // Com o painel ligado, o pedido já vai para a planilha: mostra o Pix na hora e o e-mail segue em segundo plano
+    if (C.painel) { aviso.catch(() => {}); mostrarPix(); return; }
+    aviso.then(r => r.json()).then(d => {
       if (String(d.success) !== "true") throw new Error(d.message || "erro");
       mostrarPix();
     }).catch(() => {
-      if (C.painel) { mostrarPix(); return; } // o pedido já foi para a planilha do painel
       status.textContent = "Não conseguimos registrar o pedido agora. Confira sua internet e tente de novo.";
       b.disabled = false; b.textContent = "Pagar com Pix";
     });
