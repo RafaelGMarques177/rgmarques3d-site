@@ -168,6 +168,8 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
 .radios label { display: inline-flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; font-weight: 500; cursor: pointer; }
 .radios input { accent-color: var(--accent); }
 .msg-box { background: var(--bg); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; display: grid; gap: 12px; align-content: start; }
+.pag-info { border-top: 1px solid var(--line); padding-top: 12px; display: grid; gap: 6px; font-size: 14px; color: var(--fg-2); }
+.pag-info p { margin: 0; }
 .msg-box pre { margin: 0; white-space: pre-wrap; word-break: break-word; font: 13.5px/1.5 var(--font-mono); color: var(--fg-2); max-height: 320px; overflow: auto; }
 .msg-box .status { font-size: 13.5px; color: var(--ok); min-height: 1.3em; }
 #checkout .status { font-size: 13.5px; color: var(--accent); min-height: 1.3em; margin-top: 8px; }
@@ -285,6 +287,11 @@ footer img { height: 30px; }
           <ul class="cart-list" id="cart-list"></ul>
           <p class="note" id="cart-empty">Seu carrinho está vazio. Toque em um modelo do <a href="#catalogo">catálogo</a>, escolha as cores e toque em <b>Adicionar ao carrinho</b>.</p>
           <div class="totals" id="totals"></div>
+          <div class="pag-info">
+            <div class="eyebrow">Pagamento por Pix</div>
+            <p>Preencha o endereço e toque em <b>Pagar com Pix</b>. O QR Code e o código Pix copia e cola aparecem logo abaixo, com o valor certo do seu pedido.</p>
+            <p>Dúvidas? Fale com a gente pelo Instagram <a class="js-insta" target="_blank" rel="noopener"><b class="js-handle">@rg.marqs_3d</b></a>.</p>
+          </div>
         </div>
         <form class="pedido" id="checkout" novalidate>
           <div class="field">
@@ -758,6 +765,7 @@ footer img { height: 30px; }
       if (String(d.success) !== "true") throw new Error(d.message || "erro");
       mostrarPix();
     }).catch(() => {
+      if (C.painel) { mostrarPix(); return; } // o pedido já foi para a planilha do painel
       status.textContent = "Não conseguimos registrar o pedido agora. Confira sua internet e tente de novo.";
       b.disabled = false; b.textContent = "Pagar com Pix";
     });
