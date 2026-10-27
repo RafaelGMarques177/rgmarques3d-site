@@ -4,6 +4,7 @@
   "description": "Impressão 3D sob encomenda em até 4 cores, material PLA. Chaveiros, presentes e peças úteis, com entrega em São Paulo.",
   "lang": "pt-BR",
   "dir": "ltr",
+  "id": "./?app=loja",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

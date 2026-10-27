@@ -4,7 +4,7 @@
    - Arquivos (js/css/imagens/fontes/CDN): cache primeiro, atualiza em 2º plano.
    - NUNCA mexe nas chamadas do Apps Script nem do FormSubmit: vão sempre pela rede.
    Ao publicar uma mudança, troque a data em VERSION para renovar o cache. */
-const VERSION = "rg-2026-10-27-1";
+const VERSION = "rg-2026-10-27-2";
 
 const CORE = [
   "./", "index.html", "painel.html", "catalogo.js",
