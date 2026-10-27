@@ -6,6 +6,13 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Painel RG Marques 3D</title>
 <link rel="icon" href="img/icone-perfil.svg">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="manifest" href="manifest-painel.webmanifest">
+<meta name="theme-color" content="#151515">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Painel RG">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=JetBrains+Mono:wght@500&display=swap">
 <style>
@@ -306,6 +313,12 @@ $("#atualizar").onclick = () => carregar();
 if (!API) { $("#login").hidden = false; $("#login-msg").textContent = "O site ainda não está ligado à planilha. Falta colocar o link do Apps Script no catalogo.js."; $("#entrar").disabled = true; }
 else if (senha) entrar();
 else api({ acao: "listar" }).catch(e => { if (e.code === "sem_senha") modoCriar(); else sair(""); });
+</script>
+<script>
+  // Painel instalável (PWA): mesmo service worker do site.
+  if ("serviceWorker" in navigator) {
+    addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+  }
 </script>
 </body>
 </html>

@@ -1,7 +1,14 @@
 <meta charset="utf-8">
 <title>RG Marques 3D Studio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="icon" href="img/icone-perfil.svg">
-<link rel="apple-touch-icon" href="img/icone-perfil.svg">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#151515">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="RG Marques 3D">
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Impressão 3D sob encomenda em até 4 cores, material PLA. Pagamento por Pix e entrega pelos Correios em São Paulo. Chaveiros, presentes e peças úteis.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -976,4 +983,10 @@ footer img { height: 30px; }
 
   renderFiltros(); renderGrid(); buscarPrecos();
 })();
+</script>
+<script>
+  // App instalável (PWA): registra o service worker que deixa o site abrir como app e carregar rápido.
+  if ("serviceWorker" in navigator) {
+    addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+  }
 </script>
