@@ -848,12 +848,14 @@ footer img { height: 30px; }
     for (let i = 0; i < s.length; i++) { c ^= s.charCodeAt(i) << 8; for (let b = 0; b < 8; b++) c = c & 0x8000 ? (c << 1) ^ 0x1021 : c << 1; c &= 0xFFFF; }
     return c.toString(16).toUpperCase().padStart(4, "0");
   }
-  function pixPayload(valor, txid) {
+  function pixPayload(valor) {
     const P = C.pix;
+    // QR estático: o campo txid (62/05) usa "***". Um txid próprio por pedido faz
+    // vários bancos (Inter, Itaú, Bradesco...) recusarem: "rejeitado pelo PSP do recebedor".
     let s = campo("00", "01") + campo("26", campo("00", "br.gov.bcb.pix") + campo("01", P.chave)) +
       campo("52", "0000") + campo("53", "986") + campo("54", valor.toFixed(2)) + campo("58", "BR") +
       campo("59", semAcento(P.nome).slice(0, 25)) + campo("60", semAcento(P.cidade).slice(0, 15)) +
-      campo("62", campo("05", txid)) + "6304";
+      campo("62", campo("05", "***")) + "6304";
     return s + crc16(s);
   }
 
@@ -875,7 +877,7 @@ footer img { height: 30px; }
     const cod = "RG" + Date.now().toString(36).toUpperCase().slice(-6);
     const endereco = `${v("#c-rua")}, ${v("#c-num")}${v("#c-comp") ? " - " + v("#c-comp") : ""} - ${v("#c-bairro")} - ${v("#c-cidade")}/${v("#c-uf").toUpperCase()} - CEP ${v("#c-cep")}`;
     const itensTxt = cart.map(c => `${c.qtd}x ${c.nome} (${c.cores}) = ${brl(c.preco * c.qtd)}${c.link ? " | " + c.link : ""}`).join("\n");
-    const code = pixPayload(t.total, cod);
+    const code = pixPayload(t.total);
     const abs = u => { try { return u ? new URL(u, location.href).href : ""; } catch (e) { return ""; } };
     const b = $("#c-pagar"); b.disabled = true; b.textContent = "Gerando Pix…"; status.textContent = "";
     const mostrarPix = () => {
