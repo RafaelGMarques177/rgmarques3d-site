@@ -4,11 +4,10 @@
    - Arquivos (js/css/imagens/fontes/CDN): cache primeiro, atualiza em 2º plano.
    - NUNCA mexe nas chamadas do Apps Script nem do FormSubmit: vão sempre pela rede.
    Ao publicar uma mudança, troque a data em VERSION para renovar o cache. */
-const VERSION = "rg-2026-10-27-2";
+const VERSION = "rg-2026-10-28-3";
 
 const CORE = [
-  "./", "index.html", "painel.html", "catalogo.js",
-  "manifest.webmanifest", "manifest-painel.webmanifest",
+  "./", "index.html", "catalogo.js", "manifest.webmanifest",
   "img/icone-perfil.svg", "img/logo-horizontal-transparente.svg",
   "img/icon-192.png", "img/icon-512.png", "img/apple-touch-icon.png"
 ];
