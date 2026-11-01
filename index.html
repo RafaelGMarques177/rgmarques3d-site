@@ -528,15 +528,31 @@ footer img { height: 30px; }
     for (const id in mapa) { const p = +mapa[id]; if (porId[id] && p > 0 && porId[id].preco !== p) { porId[id].preco = p; mud = true; } }
     return mud;
   }
+  // Esconde da loja os produtos marcados como "Ocultar" na planilha (coluna E).
+  function aplicarOcultos(ids) {
+    if (!Array.isArray(ids) || !ids.length) return false;
+    const set = new Set(ids.map(String));
+    let mud = false;
+    for (let k = itens.length - 1; k >= 0; k--) {
+      if (set.has(itens[k].id)) { delete porId[itens[k].id]; itens.splice(k, 1); mud = true; }
+    }
+    return mud;
+  }
   aplicarPrecos(window.PRECOS);
   try { aplicarPrecos(JSON.parse(localStorage.getItem("rg-precos") || "null")); } catch (e) {}
+  try { aplicarOcultos(JSON.parse(localStorage.getItem("rg-ocultos") || "null")); } catch (e) {}
   function buscarPrecos() {
     if (!C.painel) return;
     fetch(C.painel + "?acao=precos", { cache: "no-store" }).then(r => r.json()).then(d => {
-      if (d && d.ok && d.precos) {
+      if (!d || !d.ok) return;
+      let mud = false;
+      if (d.precos) {
         try { localStorage.setItem("rg-precos", JSON.stringify(d.precos)); } catch (e) {}
-        if (aplicarPrecos(d.precos)) { renderGrid(); renderCart(); }
+        if (aplicarPrecos(d.precos)) mud = true;
       }
+      try { localStorage.setItem("rg-ocultos", JSON.stringify(d.ocultos || [])); } catch (e) {}
+      if (aplicarOcultos(d.ocultos)) mud = true;
+      if (mud) { renderGrid(); renderCart(); }
     }).catch(() => {});
   }
 
