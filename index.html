@@ -508,6 +508,8 @@ footer img { height: 30px; }
   const corHex = n => (CORES.find(c => c.nome === n) || CORES[0]).hex;
   const catNome = id => (CATS.find(c => c.id === id) || {}).nome || "";
   const norm = s => (s || "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const idPorNome = {}; CATS.forEach(c => { idPorNome[norm(c.nome)] = c.id; });
+  const catIdDe = nome => idPorNome[norm(nome)] || "casa";   // id s\u00f3 para escolher o \u00edcone/cor da categoria
   const brl = v => "R$ " + v.toFixed(2).replace(".", ",");
   const LIC_URL = { "CC BY": "https://creativecommons.org/licenses/by/4.0/deed.pt-br", "CC BY-SA": "https://creativecommons.org/licenses/by-sa/4.0/deed.pt-br", "CC0": "https://creativecommons.org/publicdomain/zero/1.0/deed.pt-br", "GPL-2.0": "https://www.gnu.org/licenses/old-licenses/gpl-2.0.html", "GPL-3.0": "https://www.gnu.org/licenses/gpl-3.0.html", "BSD": "https://opensource.org/license/bsd-3-clause" };
 
@@ -518,7 +520,7 @@ footer img { height: 30px; }
       url: "https://www.printables.com/model/" + id,
       foto: (window.FOTOS || {})[id] ? "https://media.printables.com/" + window.FOTOS[id] : ""
     })));
-  itens.forEach(i => { i.busca = norm([i.nome, i.tags, i.cat.map(catNome).join(" "), i.autor].join(" ")); });
+  itens.forEach(i => { i.catNome = catNome(i.cat[0]) || ""; i.busca = norm([i.nome, i.tags, i.catNome, i.autor].join(" ")); });
 
   // ---------- Preços da planilha (você edita na aba "Produtos", sem mexer em código) ----------
   const porId = {}; itens.forEach(i => { porId[i.id] = i; });
@@ -538,20 +540,51 @@ footer img { height: 30px; }
     }
     return mud;
   }
+  function recomputaBusca() { itens.forEach(i => { i.busca = norm([i.nome, i.tags, i.catNome, i.autor].join(" ")); }); }
+  // Nome do produto (coluna B da aba "Produtos")
+  function aplicarNomes(mapa) {
+    if (!mapa) return false; let mud = false;
+    for (const id in mapa) { const n = String(mapa[id] || "").trim(); if (porId[id] && n && porId[id].nome !== n) { porId[id].nome = n; mud = true; } }
+    if (mud) recomputaBusca(); return mud;
+  }
+  // Categoria do produto (coluna C da aba "Produtos")
+  function aplicarCats(mapa) {
+    if (!mapa) return false; let mud = false;
+    for (const id in mapa) { const n = String(mapa[id] || "").trim(); if (porId[id] && n && porId[id].catNome !== n) { porId[id].catNome = n; mud = true; } }
+    if (mud) recomputaBusca(); return mud;
+  }
+  // Lista de categorias (aba "Categorias": Nome | Ordem | Ocultar) — controla ordem, nome e visibilidade
+  let catAtual = "todos";
+  let catOrder = CATS.map(c => c.nome);
+  let catHidden = new Set();
+  function aplicarCategorias(lista) {
+    if (!Array.isArray(lista) || !lista.length) return false;
+    const ord = lista.slice().sort((a, b) => (+a.ordem || 999) - (+b.ordem || 999));
+    catOrder = ord.map(c => String(c.nome || "").trim()).filter(Boolean);
+    catHidden = new Set(ord.filter(c => c.oculta).map(c => String(c.nome || "").trim()));
+    if (catAtual !== "todos" && (!catOrder.includes(catAtual) || catHidden.has(catAtual))) catAtual = "todos";
+    return true;
+  }
   aplicarPrecos(window.PRECOS);
   try { aplicarPrecos(JSON.parse(localStorage.getItem("rg-precos") || "null")); } catch (e) {}
   try { aplicarOcultos(JSON.parse(localStorage.getItem("rg-ocultos") || "null")); } catch (e) {}
+  try { const c = JSON.parse(localStorage.getItem("rg-catalogo") || "null"); if (c) { aplicarNomes(c.nomes); aplicarCats(c.cats); aplicarCategorias(c.categorias); } } catch (e) {}
   function buscarPrecos() {
     if (!C.painel) return;
     fetch(C.painel + "?acao=precos", { cache: "no-store" }).then(r => r.json()).then(d => {
       if (!d || !d.ok) return;
-      let mud = false;
+      let mud = false, mudCat = false;
       if (d.precos) {
         try { localStorage.setItem("rg-precos", JSON.stringify(d.precos)); } catch (e) {}
         if (aplicarPrecos(d.precos)) mud = true;
       }
       try { localStorage.setItem("rg-ocultos", JSON.stringify(d.ocultos || [])); } catch (e) {}
       if (aplicarOcultos(d.ocultos)) mud = true;
+      if (aplicarNomes(d.nomes)) mud = true;
+      if (aplicarCats(d.cats)) { mud = true; mudCat = true; }
+      if (aplicarCategorias(d.categorias)) { mud = true; mudCat = true; }
+      try { localStorage.setItem("rg-catalogo", JSON.stringify({ nomes: d.nomes || {}, cats: d.cats || {}, categorias: d.categorias || [] })); } catch (e) {}
+      if (mudCat) renderFiltros();
       if (mud) { renderGrid(); renderCart(); }
     }).catch(() => {});
   }
@@ -584,13 +617,15 @@ footer img { height: 30px; }
   const corCat = { dragoes: "#7B3FA0", articulados: "#2E9E52", chaveiros: "#F26B1D", fidget: "#2160C4", figuras: "#F2C230", casa: "#8B8E93", organizacao: "#151515", suportes: "#F26B1D", vasos: "#2E9E52", luminarias: "#F2C230", cozinha: "#7B3FA0", jogos: "#2160C4", brinquedos: "#2E9E52", datas: "#7B3FA0", acessorios: "#F26B1D", pets: "#8B8E93", ferramentas: "#151515" };
 
   // ---------- Catálogo ----------
-  let catAtual = "todos", termo = "", limite = 48;
+  let termo = "", limite = 48;
   const grid = $("#grid"), info = $("#info"), filters = $("#filters");
 
   function renderFiltros() {
-    const cont = id => id === "todos" ? itens.length : itens.filter(i => i.cat.includes(id)).length;
-    filters.innerHTML = [{ id: "todos", nome: "Todos" }].concat(CATS).map(c =>
-      `<button class="chip" type="button" data-cat="${c.id}" aria-pressed="${c.id === catAtual}">${c.nome} <b>${cont(c.id)}</b></button>`).join("");
+    const visiveis = catOrder.filter(n => !catHidden.has(n));
+    const cont = nome => nome === "todos" ? itens.filter(i => !catHidden.has(i.catNome)).length : itens.filter(i => i.catNome === nome).length;
+    const linhas = [{ key: "todos", nome: "Todos" }].concat(visiveis.map(n => ({ key: n, nome: n })));
+    filters.innerHTML = linhas.map(c =>
+      `<button class="chip" type="button" data-cat="${esc(c.key)}" aria-pressed="${c.key === catAtual}">${esc(c.nome)} <b>${cont(c.key)}</b></button>`).join("");
   }
   filters.addEventListener("click", e => {
     const b = e.target.closest("[data-cat]"); if (!b) return;
@@ -600,8 +635,8 @@ footer img { height: 30px; }
   function cardHTML(i) {
     const thumb = i.proprio
       ? `<img src="${i.img}" alt="" loading="lazy">`
-      : ilustracao(i.cat[0], corCat[i.cat[0]]) + (i.foto ? `<img class="foto" src="${i.foto}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : "");
-    const badge = i.proprio ? `<span class="badge rg">${i.novo ? "Novo · RG" : "RG · 3D"}</span>` : `<span class="badge">${catNome(i.cat[0])}</span>`;
+      : ilustracao(catIdDe(i.catNome), corCat[catIdDe(i.catNome)]) + (i.foto ? `<img class="foto" src="${i.foto}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : "");
+    const badge = i.proprio ? `<span class="badge rg">${i.novo ? "Novo · RG" : "RG · 3D"}</span>` : `<span class="badge">${esc(i.catNome)}</span>`;
     const meta = i.proprio ? "Criado pela RG · prévia 3D" : "por " + esc(i.autor);
     return `<button class="card" type="button" data-id="${i.id}">
       <div class="thumb">${badge}${thumb}</div>
@@ -614,17 +649,18 @@ footer img { height: 30px; }
     const palavras = norm(termo).split(/\s+/).filter(Boolean)
       .map(w => w.replace(/(oes|aes|s)$/, "")); // dragões -> drag, chaveiros -> chaveiro
     const lista = itens.filter(i =>
-      (catAtual === "todos" || i.cat.includes(catAtual)) &&
+      !catHidden.has(i.catNome) &&
+      (catAtual === "todos" || i.catNome === catAtual) &&
       palavras.every(w => i.busca.includes(w)));
     if (!lista.length) {
-      grid.innerHTML = `<div class="empty" style="grid-column:1/-1">Nada encontrado para "<b>${esc(termo)}</b>"${catAtual !== "todos" ? " em " + catNome(catAtual) : ""}.<br>Tente outra palavra ou veja todas as categorias.</div>`;
+      grid.innerHTML = `<div class="empty" style="grid-column:1/-1">Nada encontrado para "<b>${esc(termo)}</b>"${catAtual !== "todos" ? " em " + esc(catAtual) : ""}.<br>Tente outra palavra ou veja todas as categorias.</div>`;
     } else grid.innerHTML = lista.slice(0, limite).map(cardHTML).join("");
     mais.hidden = lista.length <= limite;
     mais.textContent = `Mostrar mais (${lista.length - Math.min(limite, lista.length)} restantes)`;
     const partes = [];
     partes.push(lista.length + (lista.length === 1 ? " modelo" : " modelos"));
     if (termo) partes.push(`para "${termo}"`);
-    if (catAtual !== "todos") partes.push("em " + catNome(catAtual));
+    if (catAtual !== "todos") partes.push("em " + catAtual);
     info.textContent = partes.join(" ");
   }
   grid.addEventListener("click", e => { const c = e.target.closest("[data-id]"); if (c) abrirFicha(c.dataset.id); });
@@ -648,7 +684,7 @@ footer img { height: 30px; }
 
   function abrirFicha(id) {
     atual = itens.find(i => i.id === id); if (!atual) return;
-    $("#ficha-cat").textContent = atual.cat.map(catNome).join(" · ");
+    $("#ficha-cat").textContent = atual.catNome;
     $("#ficha-nome").textContent = atual.nome;
     const specs = atual.proprio ? Object.assign({}, atual.specs) : {
       "Tamanho": "tamanho original do modelo", "Material": "PLA", "Cores": "1 cor (escolha abaixo)" };
@@ -701,7 +737,7 @@ footer img { height: 30px; }
     fecharViewer();
     viewerEl.innerHTML = "";
     if (!atual.proprio || !window.THREE || !THREE.OrbitControls) {
-      viewerEl.innerHTML = `<div class="ill">${ilustracao(atual.cat[0], corHex(escolha[0]))}</div>` +
+      viewerEl.innerHTML = `<div class="ill">${ilustracao(catIdDe(atual.catNome), corHex(escolha[0]))}</div>` +
         ((atual.proprio || atual.foto) ? `<img src="${atual.proprio ? atual.img : atual.foto}" alt="" referrerpolicy="no-referrer" onerror="this.remove()" style="position:absolute;inset:0;width:100%;height:100%;object-fit:${atual.proprio ? "contain" : "cover"};background:#EDEBE6">` : "");
       return;
     }
