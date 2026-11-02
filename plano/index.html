@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Plano de Vendas RG</title>
+<link rel="icon" href="../img/icone-perfil.svg">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#e8620f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Plano RG">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Figtree:wght@400;600;700&display=swap">
+<style>
+/* Layout: uma coluna estreita, abas no topo, cada aba = poucos cartões curtos */
+:root{
+  --bg:#ffffff; --surface:#f4f2f0; --line:#e3dfdb;
+  --fg:#16130f; --muted:#6b635c;
+  --accent:#e8620f; --accent-soft:#fde7d8; --on-accent:#ffffff;
+  --cost:#8a8178; --fee:#3d3a37; --good:#1f8a4c; --bad:#c23b22;
+  --display:"Unbounded", "Arial Black", system-ui, sans-serif;
+  --body:"Figtree", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#121110; --surface:#1d1b19; --line:#33302c;
+  --fg:#f4f2f0; --muted:#a69d94;
+  --accent:#ff7a2e; --accent-soft:#3a2416; --on-accent:#16130f;
+  --cost:#8f867d; --fee:#d9d4cf; --good:#4cc47e; --bad:#ff7a63; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#121110; --surface:#1d1b19; --line:#33302c;
+  --fg:#f4f2f0; --muted:#a69d94;
+  --accent:#ff7a2e; --accent-soft:#3a2416; --on-accent:#16130f;
+  --cost:#8f867d; --fee:#d9d4cf; --good:#4cc47e; --bad:#ff7a63; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:calc(16px + env(safe-area-inset-top, 0px)) calc(64px + env(safe-area-inset-bottom, 0px))}
+.wrap{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,5vw,34px);font-weight:700}
+h1 span{color:var(--accent)}
+h2{font-size:20px;font-weight:700}
+h3{font-size:16px;font-weight:500}
+p{margin:0}
+.lead{color:var(--muted);font-size:18px}
+
+.tabs{display:flex;gap:8px;flex-wrap:wrap;position:sticky;top:env(safe-area-inset-top, 0px);background:var(--bg);padding-block:10px;z-index:5;border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top, 0px);z-index:10;background:var(--bg)}
+.tab{font:600 15px var(--body);border:1.5px solid var(--line);background:var(--surface);color:var(--fg);padding:8px 14px;border-radius:999px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.tab:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+.panel{display:flex;flex-direction:column;gap:16px}
+.card{background:var(--surface);border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.big{display:flex;gap:14px;align-items:flex-start}
+.big svg{flex:0 0 44px;width:44px;height:44px}
+.big > div{min-width:0;display:flex;flex-direction:column;gap:4px}
+.tip{border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:0 12px 12px 0;padding:12px 16px}
+.tip b{color:var(--accent)}
+
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0}
+.steps li{display:grid;grid-template-columns:40px 1fr;gap:12px;padding-bottom:16px;position:relative}
+.steps li::before{counter-increment:s;content:counter(s);font:700 16px var(--display);width:40px;height:40px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:grid;place-items:center}
+.steps li::after{content:"";position:absolute;left:19px;top:42px;bottom:2px;width:2px;background:var(--line)}
+.steps li:last-child::after{display:none}
+.steps{counter-reset:s}
+.steps li > div{min-width:0;padding-top:7px}
+.steps .sub{color:var(--muted);font-size:15px}
+
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.mini{background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.mini .t{font-weight:700}
+.mini .d{color:var(--muted);font-size:15px}
+.tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);width:max-content}
+
+/* calculadora */
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+label{display:flex;flex-direction:column;gap:4px;font-weight:600;font-size:15px}
+input,select{font:600 18px var(--body);padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);width:100%}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{font:600 15px var(--body);padding:9px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.costline{font-size:15px;color:var(--muted)}
+.costline b{color:var(--fg);font-variant-numeric:tabular-nums}
+.chan{display:flex;flex-direction:column;gap:8px;padding-top:12px;border-top:1px solid var(--line)}
+.chan:first-of-type{border-top:0;padding-top:0}
+.chanhead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.price{font:700 24px var(--display);font-variant-numeric:tabular-nums}
+.bar{display:flex;height:28px;border-radius:8px;overflow:hidden;background:var(--line)}
+.bar span{display:block;height:100%}
+.b-cost{background:var(--cost)} .b-fee{background:var(--fee)} .b-profit{background:var(--accent)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.profit{font-weight:700;font-variant-numeric:tabular-nums}
+.profit.neg{color:var(--bad)}
+
+.check{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.check label{flex-direction:row;align-items:center;gap:12px;font-weight:600;background:var(--surface);padding:12px 14px;border-radius:12px;cursor:pointer}
+.check input{width:22px;height:22px;flex:0 0 22px;accent-color:var(--accent)}
+.check input:checked + span{text-decoration:line-through;color:var(--muted)}
+.quote{background:var(--bg);border:1.5px dashed var(--accent);border-radius:12px;padding:14px 16px;font-style:italic}
+.copy{font:600 14px var(--body);align-self:flex-start;padding:8px 14px;border-radius:999px;border:0;background:var(--accent);color:var(--on-accent);cursor:pointer}
+.foot{font-size:13px;color:var(--muted)}
+.foot a{color:var(--muted)}
+@media (prefers-reduced-motion: no-preference){ .panel{animation:in .25s ease-out} @keyframes in{from{transform:translateY(6px)}to{transform:none}} }
+
+.badge{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--fg);color:var(--bg);font-size:13px;margin-left:4px}
+.tab[aria-selected="true"] .badge{background:var(--on-accent);color:var(--accent)}
+.tasks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.task{background:var(--surface);border-radius:14px;padding:12px 14px;display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start}
+.task.late{box-shadow:inset 4px 0 0 var(--bad)}
+.task.today{box-shadow:inset 4px 0 0 var(--accent)}
+.task .ok{width:34px;height:34px;border-radius:50%;border:2.5px solid var(--accent);background:transparent;cursor:pointer;display:grid;place-items:center;padding:0}
+.task.done .ok{background:var(--accent)}
+.task.done .ok::after{content:"";width:12px;height:7px;border-left:3px solid var(--on-accent);border-bottom:3px solid var(--on-accent);transform:rotate(-45deg) translate(1px,-1px)}
+.task .txt{min-width:0;display:flex;flex-direction:column;gap:6px}
+.task .t{font-weight:700}
+.task.done .t{text-decoration:line-through;color:var(--muted)}
+.task .meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:14px;color:var(--muted)}
+.task .meta input{font:600 14px var(--body);padding:4px 8px;width:auto}
+.task .meta a,.task .meta button.lk{color:var(--accent);font:600 14px var(--body);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
+.when.late{color:var(--bad);font-weight:700}
+.vazio{background:var(--surface);border-radius:14px;padding:18px;text-align:center;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header style="display:flex;flex-direction:column;gap:8px">
+    <span class="tag">RG Marques 3D</span>
+    <h1>Vender mais, <span>sem complicar</span></h1>
+    <p class="lead">Uma aba por vez. A aba Hoje mostra só o que fazer agora.</p>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Partes do plano">
+    <button class="tab" role="tab" id="t-hoje" aria-controls="p-hoje">Hoje <span class="badge" id="badge" hidden></span></button>
+    <button class="tab" role="tab" id="t-preco" aria-controls="p-preco">1. Preço</button>
+    <button class="tab" role="tab" id="t-shopee" aria-controls="p-shopee">2. Shopee</button>
+    <button class="tab" role="tab" id="t-consig" aria-controls="p-consig">3. Consignação</button>
+    <button class="tab" role="tab" id="t-ideias" aria-controls="p-ideias">4. Ideias</button>
+    <button class="tab" role="tab" id="t-fazer" aria-controls="p-fazer">5. Todas as tarefas</button>
+  </nav>
+
+  <!-- HOJE -->
+  <section class="panel" role="tabpanel" id="p-hoje" aria-labelledby="t-hoje" hidden>
+    <div class="card big" id="hoje-topo">
+      <svg viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="24" r="16" fill="var(--accent)"/><path d="M22 14v10l7 4" fill="none" stroke="var(--on-accent)" stroke-width="3" stroke-linecap="round"/><path d="M8 10l6-5M36 10l-6-5" stroke="var(--fg)" stroke-width="3" stroke-linecap="round"/></svg>
+      <div><h2 id="hoje-titulo">Hoje</h2><p id="hoje-sub"></p></div>
+    </div>
+    <ul class="tasks" id="lista-hoje"></ul>
+    <div class="card" id="lembretes">
+      <h3>Lembretes</h3>
+      <p id="lem-estado" class="costline"></p>
+      <label for="hora" style="max-width:220px">Hora do lembrete<input id="hora" type="time" value="14:00"></label>
+      <button class="copy" type="button" id="ativar">Ativar lembretes no celular</button>
+      <p class="costline">As tarefas também estão na sua Google Agenda, com aviso às 14h. Esse é o lembrete mais garantido.</p>
+    </div>
+    <div class="card">
+      <h3>Nova tarefa</h3>
+      <div class="form">
+        <label for="nova-t">O que fazer<input id="nova-t" type="text" placeholder="Ex.: comprar filamento laranja"></label>
+        <label for="nova-d">Quando<input id="nova-d" type="date"></label>
+      </div>
+      <button class="copy" type="button" id="add">Adicionar</button>
+    </div>
+  </section>
+
+  <!-- PREÇO -->
+  <section class="panel" role="tabpanel" id="p-preco" aria-labelledby="t-preco">
+    <div class="card big">
+      <svg viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="20" fill="var(--accent)"/><text x="22" y="29" text-anchor="middle" font-family="Unbounded,Arial" font-weight="700" font-size="20" fill="var(--on-accent)">R$</text></svg>
+      <div><h2>A regra é uma só</h2><p>Preço = custo da peça × 2 ou × 3. Na Shopee precisa ser mais, porque ela fica com uma parte.</p></div>
+    </div>
+
+    <div class="card">
+      <h2>Calculadora</h2>
+      <p class="costline">Troque os números. O resto se calcula sozinho. (Começa com um suporte de celular de exemplo.)</p>
+      <div class="form">
+        <label for="g">Peso da peça (gramas)<input id="g" type="number" inputmode="decimal" min="1" value="50"></label>
+        <label for="kg">Preço do rolo de 1 kg (R$)<input id="kg" type="number" inputmode="decimal" min="1" value="100"></label>
+        <label for="cores">Quantas cores
+          <select id="cores"><option value="0">1 cor</option><option value="0.2">2 cores</option><option value="0.35">3 cores</option><option value="0.5">4 cores</option></select>
+        </label>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <span style="font-weight:600;font-size:15px">Quanto de lucro?</span>
+        <div class="seg" id="mult">
+          <button type="button" data-m="2" aria-pressed="false">Dobro (× 2)</button>
+          <button type="button" data-m="2.5" aria-pressed="false">× 2,5</button>
+          <button type="button" data-m="3" aria-pressed="true">Triplo (× 3)</button>
+        </div>
+      </div>
+      <p class="costline">Custo da peça: <b id="custo">—</b> <span>(filamento + troca de cor + embalagem R$ 1,50 + 10% de folga para falhas)</span></p>
+    </div>
+
+    <div class="card" id="result">
+      <h2>Quanto cobrar em cada lugar</h2>
+      <div class="legend"><span><i class="b-cost"></i>custo</span><span><i class="b-fee"></i>taxa / parte da loja</span><span><i class="b-profit"></i>seu lucro</span></div>
+      <div class="chan" id="c-site"></div>
+      <div class="chan" id="c-shopee"></div>
+      <div class="chan" id="c-consig"></div>
+    </div>
+
+    <div class="tip"><b>Dica:</b> chaveiro sozinho na Shopee fica caro. Lá, venda em kit de 3 ou 5 (ponha 24 g e veja).</div>
+  </section>
+
+  <!-- SHOPEE -->
+  <section class="panel" role="tabpanel" id="p-shopee" aria-labelledby="t-shopee" hidden>
+    <div class="card big">
+      <svg viewBox="0 0 44 44" aria-hidden="true"><rect x="6" y="14" width="32" height="24" rx="5" fill="var(--accent)"/><path d="M15 15a7 7 0 0 1 14 0" fill="none" stroke="var(--fg)" stroke-width="3"/></svg>
+      <div><h2>Shopee com o seu CPF</h2><p>Ela fica com <b>20% + R$ 7</b> de cada peça até R$ 79,99. Quando abrir o MEI, a taxa cai R$ 3.</p></div>
+    </div>
+
+    <div class="card">
+      <h3>Abrir a conta (30 minutos)</h3>
+      <ol class="steps">
+        <li><div>Entre em <b>seller.shopee.com.br</b><div class="sub">Use o e-mail da loja, não o pessoal.</div></div></li>
+        <li><div>Escolha "Pessoa Física" e ponha o CPF<div class="sub">Vai chegar um código no celular.</div></div></li>
+        <li><div>Cadastre a conta do Banco Inter<div class="sub">O dinheiro das vendas cai lá.</div></div></li>
+        <li><div>Nome: RG Marques 3D, com a logo<div class="sub">Descrição: "Peças impressas em 3D, PLA, até 4 cores". Sem bairro.</div></div></li>
+        <li><div>Escolha "levar ao ponto de coleta"<div class="sub">O comprador só vê "enviado de São Paulo".</div></div></li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3>Primeiros anúncios</h3>
+      <div class="grid2">
+        <div class="mini"><span class="t">5 a 10 anúncios</span><span class="d">Os 5 organizadores campeões + kits de chaveiro.</span></div>
+        <div class="mini"><span class="t">5 fotos cada</span><span class="d">Fundo liso, uma com a mão (mostra o tamanho), um vídeo curto.</span></div>
+        <div class="mini"><span class="t">Título que buscam</span><span class="d">"Suporte Headset Mesa Gamer Impresso 3D Laranja"</span></div>
+        <div class="mini"><span class="t">Cores num anúncio só</span><span class="d">Só as 8 cores que você tem.</span></div>
+      </div>
+    </div>
+
+    <div class="tip"><b>Atenção:</b> poste em até 2 dias úteis. Atrasar muito esconde a loja. Deixe 2 ou 3 de cada campeão já prontos.</div>
+    <div class="tip"><b>Sem contato:</b> o chat é dentro do app e não mostra seu telefone. Nunca passe WhatsApp ou Pix por fora: a Shopee bloqueia.</div>
+    <div class="tip"><b>Para decidir:</b> na Shopee a venda vai para o Brasil todo (o frete é com eles). No site continua só SP.</div>
+  </section>
+
+  <!-- CONSIGNAÇÃO -->
+  <section class="panel" role="tabpanel" id="p-consig" aria-labelledby="t-consig" hidden>
+    <div class="card big">
+      <svg viewBox="0 0 44 44" aria-hidden="true"><path d="M6 18 L22 7 L38 18 V38 H6 Z" fill="var(--accent)"/><rect x="17" y="25" width="10" height="13" fill="var(--bg)"/></svg>
+      <div><h2>Peças na loja, você recebe quando vender</h2><p>A loja não paga nada antes. Quando vende, fica com <b>30%</b> e você recebe <b>70%</b>.</p></div>
+    </div>
+
+    <div class="card">
+      <h3>Como fazer</h3>
+      <ol class="steps">
+        <li><div>Escolha 3 lojas no Instagram<div class="sub">Papelaria, loja de presentes, loja geek ou de celular.</div></div></li>
+        <li><div>Mande a mensagem pronta (abaixo)</div></li>
+        <li><div>Vá à loja com 20 a 30 peças<div class="sub">Num expositor impresso por você, com a logo e o QR code do site.</div></div></li>
+        <li><div>Assinem um termo de 1 página<div class="sub">Uma via para cada um.</div></div></li>
+        <li><div>Uma vez por mês: conte, receba por Pix e reponha</div></li>
+        <li><div>Depois de 2 meses, fique só nas lojas que venderam</div></li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3>Mensagem pronta</h3>
+      <p class="quote" id="msg">Olá! Sou da RG Marques 3D. Faço peças impressas em 3D, coloridas e feitas à mão. Gostaria de deixar algumas na sua loja em consignação: você só paga o que vender, sem custo nenhum. Posso passar aí para mostrar?</p>
+      <button class="copy" type="button" id="copiar">Copiar mensagem</button>
+    </div>
+
+    <div class="card">
+      <h3>O termo precisa ter</h3>
+      <div class="grid2">
+        <div class="mini"><span class="t">Lista das peças</span><span class="d">Quantas e o preço de cada.</span></div>
+        <div class="mini"><span class="t">70% / 30%</span><span class="d">Sua parte e a da loja.</span></div>
+        <div class="mini"><span class="t">Dia do acerto</span><span class="d">Todo mês, por Pix.</span></div>
+        <div class="mini"><span class="t">Perda ou quebra</span><span class="d">A loja paga.</span></div>
+      </div>
+    </div>
+
+    <div class="tip"><b>Segurança:</b> vá em horário comercial, de preferência com alguém da família. Passe só o Pix da loja, nunca o endereço. Tire foto do expositor no dia.</div>
+  </section>
+
+  <!-- IDEIAS -->
+  <section class="panel" role="tabpanel" id="p-ideias" aria-labelledby="t-ideias" hidden>
+    <div class="tip"><b>Mais urgente: Natal.</b> Anuncie kits de presente até o fim de novembro.</div>
+    <div class="grid2">
+      <div class="mini"><span class="tag">fácil</span><span class="t">Kits de Natal</span><span class="d">Enfeites, chaveiros e mini figuras em caixinha.</span></div>
+      <div class="mini"><span class="tag">fácil</span><span class="t">Mercado Livre</span><span class="d">Igual à Shopee, outro público.</span></div>
+      <div class="mini"><span class="tag">fácil</span><span class="t">Elo7</span><span class="d">Site de coisas feitas à mão. Bom para personalizado.</span></div>
+      <div class="mini"><span class="tag">médio</span><span class="t">Atacado</span><span class="d">Loja compra 20+ peças com 40% de desconto e paga antes.</span></div>
+      <div class="mini"><span class="tag">médio</span><span class="t">Lembrancinhas</span><span class="d">10 a 50 chaveiros com o tema da festa.</span></div>
+      <div class="mini"><span class="tag">médio</span><span class="t">Brindes de empresa</span><span class="d">Chaveiro ou suporte com a logo deles.</span></div>
+      <div class="mini"><span class="tag">médio</span><span class="t">Escolas</span><span class="d">Peças didáticas para professores. Você conhece esse público.</span></div>
+      <div class="mini"><span class="tag">médio</span><span class="t">TikTok Shop</span><span class="d">Vende direto pelo vídeo das peças.</span></div>
+      <div class="mini"><span class="tag">difícil</span><span class="t">Caixa surpresa</span><span class="d">Cliente paga todo mês e recebe 2 ou 3 peças.</span></div>
+    </div>
+  </section>
+
+  <!-- FAZER -->
+  <section class="panel" role="tabpanel" id="p-fazer" aria-labelledby="t-fazer" hidden>
+    <p class="lead">Toque na bolinha quando terminar. Mude a data se precisar.</p>
+    <ul class="tasks" id="lista-todas"></ul>
+  </section>
+
+  <p class="foot">Taxas da Shopee de novembro de 2026, segundo <a href="https://ecommercenapratica.com/blog/taxa-shopee/" target="_blank" rel="noopener">E-commerce na Prática</a> e <a href="https://gosmarter.com.br/taxas-shopee-2026/" target="_blank" rel="noopener">GoSmarter</a>. Confira na Central do Vendedor antes de pôr o preço. Valores de custo são estimativas.</p>
+</div>
+
+<script>
+(function(){
+  const store = {
+    get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
+    set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  };
+  // abas
+  const tabs=[...document.querySelectorAll('.tab')];
+  function show(id){
+    tabs.forEach(t=>{ const on=t.id===id; t.setAttribute('aria-selected',on); document.getElementById(t.getAttribute('aria-controls')).hidden=!on; });
+    store.set('rg-aba',id);
+  }
+  tabs.forEach(t=>t.addEventListener('click',()=>{ show(t.id); window.scrollTo({top:0}); }));
+  const saved=store.get('rg-aba'); show(saved && document.getElementById(saved) ? saved : 't-hoje');
+
+  // calculadora
+  const brl = v => 'R$ ' + v.toFixed(2).replace('.',',');
+  const r90 = v => Math.max(0.9, Math.ceil(v + 0.10) - 0.10);
+  let mult = 3;
+  document.querySelectorAll('#mult button').forEach(b=>b.addEventListener('click',()=>{
+    mult=parseFloat(b.dataset.m);
+    document.querySelectorAll('#mult button').forEach(x=>x.setAttribute('aria-pressed', x===b));
+    calc();
+  }));
+  // taxa Shopee CPF por faixa (inclui +R$3 do CPF)
+  function shopeeFee(p){
+    if(p<80) return {pct:.20, fix:7};
+    if(p<100) return {pct:.14, fix:19};
+    if(p<200) return {pct:.14, fix:23};
+    if(p<500) return {pct:.14, fix:29};
+    return {pct:.14, fix:29};
+  }
+  function shopeePrice(custo, lucro){
+    // tenta cada faixa e fica com a que bate
+    const bands=[[0,79.99,.20,7],[80,99.99,.14,19],[100,199.99,.14,23],[200,1e9,.14,29]];
+    for(const [lo,hi,pct,fix] of bands){
+      const p=(custo+lucro+fix)/(1-pct);
+      if(p>=lo && p<=hi) return p;
+      if(p<lo) return lo; // pulo de faixa: usa o mínimo da faixa
+    }
+    return (custo+lucro+29)/0.86;
+  }
+  function render(el, name, note, price, custo, fee){
+    const lucro = price - custo - fee;
+    const tot = Math.max(price, custo + fee);
+    const w = x => Math.max(0, x/tot*100).toFixed(1)+'%';
+    el.innerHTML =
+      '<div class="chanhead"><h3>'+name+'</h3><span class="price">'+brl(price)+'</span></div>'+
+      '<div class="bar" role="img" aria-label="'+name+': custo '+brl(custo)+', taxa '+brl(fee)+', lucro '+brl(lucro)+'">'+
+        '<span class="b-cost" style="width:'+w(custo)+'"></span>'+
+        '<span class="b-fee" style="width:'+w(fee)+'"></span>'+
+        '<span class="b-profit" style="width:'+w(lucro)+'"></span></div>'+
+      '<p>'+note+' Sobra para você: <span class="profit'+(lucro<0?' neg':'')+'">'+brl(lucro)+'</span></p>';
+  }
+  function calc(){
+    const g=Math.max(0, parseFloat(document.getElementById('g').value)||0);
+    const kg=Math.max(0, parseFloat(document.getElementById('kg').value)||0);
+    const extra=parseFloat(document.getElementById('cores').value)||0;
+    const custo=((g*kg/1000)*(1+extra) + 1.5) * 1.10;
+    document.getElementById('custo').textContent=brl(custo);
+    const lucro=custo*(mult-1);
+    const site=r90(custo*mult);
+    render(document.getElementById('c-site'),'Site e Instagram','Sem taxa.',site,custo,0);
+    const sp=r90(shopeePrice(custo, site-custo));
+    const f=shopeeFee(sp);
+    render(document.getElementById('c-shopee'),'Shopee','Mesmo lucro do site.',sp,custo,sp*f.pct+f.fix);
+    render(document.getElementById('c-consig'),'Consignação (preço na loja)','A loja fica com 30%.',site,custo,site*0.30);
+  }
+  ['g','kg','cores'].forEach(id=>document.getElementById(id).addEventListener('input',calc));
+  calc();
+
+  // copiar
+  document.getElementById('copiar').addEventListener('click',e=>{
+    const t=document.getElementById('msg').textContent, b=e.currentTarget;
+    const ok=()=>{ b.textContent='Copiado'; setTimeout(()=>b.textContent='Copiar mensagem',1800); };
+    const fallback=()=>{ const r=document.createRange(); r.selectNodeContents(document.getElementById('msg')); const s=getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent='Selecionado: copie com Ctrl+C'; };
+    try{ navigator.clipboard.writeText(t).then(ok,fallback); }catch(err){ fallback(); }
+  });
+
+  window.RGshow=show;
+})();
+</script>
+<script src="tarefas.js"></script>
+
+</body>
+</html>
