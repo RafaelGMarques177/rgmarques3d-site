@@ -125,9 +125,16 @@ h1 span { color: var(--accent); }
 <script>
 const PLANILHA = "1ls3BkawCqITmB0AQJWqh0T21W_lCYpEsB_R6dz-3IHY";
 const DRIVE = "https://drive.google.com/drive/folders/1uFcSX99qIZjviMzzBF_SuysN1nKnfQ-I";
-// Modelos da RG que têm arquivo para imprimir (3MF multicores + STL de cada peça) na pasta do Drive
-const ARQUIVOS = { "robo-rg": 1, "pinguim-rg": 1, "vaso-cacto-rg": 1, "suporte-gatinho-rg": 1, "foguete-rg": 1, "astronauta": 1,
-  "organizador-mesa": 1, "porta-chaves": 1, "suporte-controle": 1, "suporte-headset": 1, "suporte-celular": 1, "kit-cabos": 1 };
+// Modelos da RG: id do arquivo zip (3MF multicores + STL de cada peça) no Google Drive privado
+const ARQUIVOS = { "robo-rg": "11wSndc8YurFDFRwjTv1-jLyVCPk90a6S", "pinguim-rg": "1LYdNFWFIWDGgAPIP2ZbPtCs-edg5Oicq",
+  "vaso-cacto-rg": "15XyIygKFcyisMESwuDS9v-Cz5XAfGnDo", "suporte-gatinho-rg": "1MxCQknXWbvoJtWb-cD9wuYfO4Yc2aMUm",
+  "foguete-rg": "1-NwZY21XJXkJu6NGpzJRJimYj2sCXWUc", "astronauta": "12mF08QPmO01pv1Lj6Uc_6GauzwZq5LPO",
+  "organizador-mesa": "1rBwrjPXIy0WTPkGW3yN2vlV3YwmwlsJt", "porta-chaves": "1WJ78WwXE4iayycKpIFajFhmJ5O1ccFYl",
+  "suporte-controle": "1IAjdEFuC8M_rRzIKLrfZEzgkwg16KNpM", "suporte-headset": "1rFSGwj5TraDtfYMtbb-VkhFxAQhVhrKE",
+  "suporte-celular": "1naZ4izUhpOkoDSVicj8S4X8rvlTj4AZu", "kit-cabos": "1sXKCvZlQvZVSoB9OuRmYsf5bpLbQ6XV8" };
+const arquivoUrl = id => "https://drive.google.com/file/d/" + ARQUIVOS[id] + "/view";
+// Link do modelo para imprimir: o que veio no pedido, ou montado pelo id (modelos do Printables têm id "p" + número)
+const linkModelo = i => /^https:\/\//.test(i.link || "") ? i.link : (/^p\d+$/.test(i.id || "") ? "https://www.printables.com/model/" + i.id.slice(1) : "");
 const API = (window.CONFIG || {}).painel || "";
 
 const $ = s => document.querySelector(s);
@@ -200,8 +207,10 @@ function item(i) {
   const src = ARQUIVOS[i.id] ? "../img/" + i.id + ".png" : (/^https:\/\//.test(i.img || "") ? i.img : "");
   const foto = src ? `<img class="foto" src="${esc(src)}" alt="" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'foto',textContent:'sem foto'}))">` : `<div class="foto">sem<br>foto</div>`;
   const acoes = [];
-  if (ARQUIVOS[i.id]) acoes.push(`<a class="btn primary" href="${DRIVE}" target="_blank" rel="noopener">Arquivo no Drive: ${esc(i.id)}.zip</a>`);
-  if (/^https:\/\//.test(i.link || "")) acoes.push(`<a class="btn${ARQUIVOS[i.id] ? "" : " primary"}" href="${esc(i.link)}" target="_blank" rel="noopener">Abrir modelo para imprimir</a>`);
+  const link = linkModelo(i);
+  if (ARQUIVOS[i.id]) acoes.push(`<a class="btn primary" href="${arquivoUrl(i.id)}" target="_blank" rel="noopener">Baixar arquivo: ${esc(i.id)}.zip</a>`,
+    `<a class="btn" href="${DRIVE}" target="_blank" rel="noopener">Pasta do Drive</a>`);
+  else if (link) acoes.push(`<a class="btn primary" href="${esc(link)}" target="_blank" rel="noopener">Baixar modelo (Printables)</a>`);
   return `<div class="item">${foto}<div>
     <h3>${i.qtd ? esc(i.qtd) + "× " : ""}${esc(i.nome)}</h3>
     <p>${esc(i.cores || "")}</p>

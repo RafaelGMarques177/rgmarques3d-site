@@ -2,7 +2,7 @@
    Deixa o painel abrir como app próprio e carregar rápido. As chamadas do
    Apps Script vão sempre pela rede (dados ao vivo da planilha).
    Ao publicar mudança no painel, troque a data em VERSION. */
-const VERSION = "rg-painel-2026-10-28-1";
+const VERSION = "rg-painel-2026-11-05-1";
 
 const CORE = [
   "./", "index.html", "manifest.webmanifest",
