@@ -1,7 +1,7 @@
 /* Service worker do PLANO DE VENDAS (escopo /plano/ — app separado da loja e do painel).
    Deixa o plano abrir offline e avisa das tarefas do dia.
    Ao publicar mudança no plano, troque a data em VERSION. */
-const VERSION = "rg-plano-2026-11-02-1";
+const VERSION = "rg-plano-2026-11-08-1";
 const ESTADO = "rg-plano-estado";
 
 const CORE = [

@@ -4,17 +4,21 @@
    (onde o navegador permitir). */
 (function () {
   const BASE = [
-    { id: "k1",  t: "Escolher a margem de lucro",              d: "2026-11-03", aba: "t-preco",  dica: "Use a calculadora da aba Preço." },
-    { id: "k2",  t: "Pesar 5 peças campeãs",                   d: "2026-11-04", aba: "t-preco",  dica: "Ponha o peso de cada uma na calculadora." },
-    { id: "k3",  t: "Decidir: Shopee para o Brasil todo?",     d: "2026-11-05", aba: "t-shopee" },
-    { id: "k4",  t: "Abrir a conta na Shopee",                 d: "2026-11-06", aba: "t-shopee", dica: "Uns 30 minutos." },
-    { id: "k5",  t: "Tirar fotos e publicar 5 anúncios",       d: "2026-11-07", aba: "t-shopee" },
-    { id: "k6",  t: "Imprimir o expositor com logo e QR code", d: "2026-11-09", aba: "t-consig" },
-    { id: "k7",  t: "Mandar mensagem para 3 lojas",            d: "2026-11-10", aba: "t-consig", dica: "A mensagem pronta está na aba Consignação." },
-    { id: "k8",  t: "Começar os kits de Natal",                d: "2026-11-12", aba: "t-ideias" },
-    { id: "k9",  t: "Visitar as lojas que responderam",        d: "2026-11-17", aba: "t-consig" },
-    { id: "k10", t: "Anunciar os kits de Natal",               d: "2026-11-20", aba: "t-ideias" },
-    { id: "k11", t: "Ver o que vendeu e ajustar os preços",    d: "2026-11-30", aba: "t-preco" }
+    { id: "n1",  t: "Escolher os modelos dos 3 kits de Natal", d: "2026-11-09", aba: "t-ideias", dica: "Pegue prontos (licença que permite vender) ou me peça." },
+    { id: "n2",  t: "Abrir a conta na Shopee",                 d: "2026-11-10", aba: "t-shopee", dica: "Se ainda não abriu. Uns 30 minutos." },
+    { id: "n3",  t: "Imprimir 1 de cada kit de Natal",         d: "2026-11-11", aba: "t-ideias", dica: "São as amostras para as fotos." },
+    { id: "n4",  t: "Tirar fotos dos 3 kits",                  d: "2026-11-12", aba: "t-shopee", dica: "Fundo liso e uma foto com a mão segurando." },
+    { id: "n5",  t: "Publicar os 3 kits na Shopee e no site",  d: "2026-11-13", aba: "t-preco",  dica: "Os preços estão na aba Preço." },
+    { id: "n6",  t: "Post no Instagram dos kits de Natal",     d: "2026-11-14" },
+    { id: "n7",  t: "Imprimir o expositor com logo e QR code", d: "2026-11-16", aba: "t-consig" },
+    { id: "n8",  t: "Mandar mensagem para 3 lojas",            d: "2026-11-17", aba: "t-consig", dica: "A mensagem pronta está na aba Consignação." },
+    { id: "n9",  t: "Imprimir estoque: 3 de cada kit",         d: "2026-11-18" },
+    { id: "n10", t: "Fotos e anúncios dos 5 organizadores",    d: "2026-11-19", aba: "t-shopee", dica: "Peças separadas, preços na aba Preço." },
+    { id: "n11", t: "Visitar as lojas que responderam",        d: "2026-11-21", aba: "t-consig", dica: "Leve o expositor, o termo e 20 a 30 peças." },
+    { id: "n12", t: "Criar cupom de Black Friday (10%)",       d: "2026-11-23", dica: "No site (aba Cupons da planilha) e na Shopee." },
+    { id: "n13", t: "Repor o estoque do que vendeu",           d: "2026-11-25" },
+    { id: "n14", t: "Black Friday: post no Instagram",         d: "2026-11-27" },
+    { id: "n15", t: "Ver o que vendeu e planejar dezembro",    d: "2026-11-30", aba: "t-preco" }
   ];
 
   const ler = (k, padrao) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : padrao; } catch (e) { return padrao; } };
@@ -25,8 +29,6 @@
   let extras = ler("rg-plano-extras", []);
   let cfg = ler("rg-plano-cfg", { hora: "14:00", ultimoAviso: "" });
 
-  // compatibilidade com a lista antiga (k1..k8 marcados com "1")
-  BASE.forEach(b => { try { if (localStorage.getItem("rg-" + b.id) === "1") feito[b.id] = true; } catch (e) {} });
 
   const hojeISO = () => { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
   const todas = () => BASE.concat(extras).map(x => Object.assign({}, x, { d: datas[x.id] || x.d, feito: !!feito[x.id] }))
