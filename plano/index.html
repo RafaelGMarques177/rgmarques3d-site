@@ -128,6 +128,13 @@ input,select{font:600 18px var(--body);padding:10px 12px;border-radius:10px;bord
 .task .meta a,.task .meta button.lk{color:var(--accent);font:600 14px var(--body);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
 .when.late{color:var(--bad);font-weight:700}
 .vazio{background:var(--surface);border-radius:14px;padding:18px;text-align:center;color:var(--muted)}
+.tbl{overflow-x:auto;margin:0 -4px}
+table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:13px;color:var(--muted);font-weight:700}
+td:first-child{white-space:normal;min-width:130px;font-weight:600}
+td:nth-child(3){color:var(--accent);font-weight:700}
+tr.sec td{font:700 13px var(--body);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border-bottom:0;padding-top:16px}
 </style>
 </head>
 <body>
@@ -143,7 +150,7 @@ input,select{font:600 18px var(--body);padding:10px 12px;border-radius:10px;bord
     <button class="tab" role="tab" id="t-preco" aria-controls="p-preco">1. Preço</button>
     <button class="tab" role="tab" id="t-shopee" aria-controls="p-shopee">2. Shopee</button>
     <button class="tab" role="tab" id="t-consig" aria-controls="p-consig">3. Consignação</button>
-    <button class="tab" role="tab" id="t-ideias" aria-controls="p-ideias">4. Ideias</button>
+    <button class="tab" role="tab" id="t-ideias" aria-controls="p-ideias">4. Natal</button>
     <button class="tab" role="tab" id="t-fazer" aria-controls="p-fazer">5. Todas as tarefas</button>
   </nav>
 
@@ -173,48 +180,51 @@ input,select{font:600 18px var(--body);padding:10px 12px;border-radius:10px;bord
 
   <!-- PREÇO -->
   <section class="panel" role="tabpanel" id="p-preco" aria-labelledby="t-preco">
-    <div class="card big">
-      <svg viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="20" fill="var(--accent)"/><text x="22" y="29" text-anchor="middle" font-family="Unbounded,Arial" font-weight="700" font-size="20" fill="var(--on-accent)">R$</text></svg>
-      <div><h2>A regra é uma só</h2><p>Preço = custo da peça × 2 ou × 3. Na Shopee precisa ser mais, porque ela fica com uma parte.</p></div>
+    <div class="card">
+      <h2>O que você decidiu</h2>
+      <div class="grid2">
+        <div class="mini"><span class="t">Lucro: 2,5 vezes o custo</span><span class="d">No site e no Instagram.</span></div>
+        <div class="mini"><span class="t">Shopee: mesmo lucro</span><span class="d">Coisas pequenas em kit, peças maiores separadas. Brasil todo.</span></div>
+        <div class="mini"><span class="t">Consignação: loja 30%</span><span class="d">Você recebe 70% do preço da loja.</span></div>
+        <div class="mini"><span class="t">Começar pelo Natal</span><span class="d">3 kits. 1 a 2 horas por dia.</span></div>
+      </div>
     </div>
 
     <div class="card">
-      <h2>Calculadora</h2>
-      <p class="costline">Troque os números. O resto se calcula sozinho. (Começa com um suporte de celular de exemplo.)</p>
-      <div class="form">
-        <label for="g">Peso da peça (gramas)<input id="g" type="number" inputmode="decimal" min="1" value="50"></label>
-        <label for="kg">Preço do rolo de 1 kg (R$)<input id="kg" type="number" inputmode="decimal" min="1" value="100"></label>
-        <label for="cores">Quantas cores
-          <select id="cores"><option value="0">1 cor</option><option value="0.2">2 cores</option><option value="0.35">3 cores</option><option value="0.5">4 cores</option></select>
-        </label>
+      <h2>Preços prontos</h2>
+      <p class="costline">Já calculados. *Loja = quanto você recebe na consignação (70% do preço do site).</p>
+      <div class="tbl">
+      <table>
+        <thead><tr><th>Peça</th><th>Custo</th><th>Site</th><th>Shopee</th><th>Loja*</th></tr></thead>
+        <tbody>
+          <tr class="sec"><td colspan="5">Kits de Natal</td></tr>
+          <tr><td>6 enfeites de árvore</td><td>R$ 9</td><td>R$ 22,90</td><td>R$ 33,90</td><td>R$ 16</td></tr>
+          <tr><td>3 chaveiros natalinos</td><td>R$ 9</td><td>R$ 22,90</td><td>R$ 33,90</td><td>R$ 16</td></tr>
+          <tr><td>3 mini figuras de mesa</td><td>R$ 11</td><td>R$ 27,90</td><td>R$ 40,90</td><td>R$ 20</td></tr>
+          <tr class="sec"><td colspan="5">Kits de chaveiro</td></tr>
+          <tr><td>Kit 3 chaveiros</td><td>R$ 9</td><td>R$ 22,90</td><td>R$ 33,90</td><td>R$ 16</td></tr>
+          <tr><td>Kit 5 chaveiros</td><td>R$ 15</td><td>R$ 37,90</td><td>R$ 52,90</td><td>R$ 27</td></tr>
+          <tr><td>1 chaveiro (só site e loja)</td><td>R$ 3</td><td>R$ 7,90</td><td>—</td><td>R$ 6</td></tr>
+          <tr class="sec"><td colspan="5">Peças separadas</td></tr>
+          <tr><td>Organizador de cabos</td><td>R$ 7</td><td>R$ 17,90</td><td>R$ 27,90</td><td>R$ 13</td></tr>
+          <tr><td>Suporte de celular</td><td>R$ 8</td><td>R$ 19,90</td><td>R$ 30,90</td><td>R$ 14</td></tr>
+          <tr><td>Suporte de controle</td><td>R$ 9</td><td>R$ 22,90</td><td>R$ 33,90</td><td>R$ 16</td></tr>
+          <tr><td>Porta-chaves</td><td>R$ 10</td><td>R$ 24,90</td><td>R$ 36,90</td><td>R$ 17</td></tr>
+          <tr><td>Suporte de headset</td><td>R$ 12</td><td>R$ 29,90</td><td>R$ 43,90</td><td>R$ 21</td></tr>
+        </tbody>
+      </table>
       </div>
-      <div style="display:flex;flex-direction:column;gap:6px">
-        <span style="font-weight:600;font-size:15px">Quanto de lucro?</span>
-        <div class="seg" id="mult">
-          <button type="button" data-m="2" aria-pressed="false">Dobro (× 2)</button>
-          <button type="button" data-m="2.5" aria-pressed="false">× 2,5</button>
-          <button type="button" data-m="3" aria-pressed="true">Triplo (× 3)</button>
-        </div>
-      </div>
-      <p class="costline">Custo da peça: <b id="custo">—</b> <span>(filamento + troca de cor + embalagem R$ 1,50 + 10% de folga para falhas)</span></p>
+      <p class="costline">Custos estimados (filamento, troca de cor, embalagem e 10% de folga). Se pesar uma peça e o custo mudar muito, me diga que eu refaço a conta.</p>
     </div>
 
-    <div class="card" id="result">
-      <h2>Quanto cobrar em cada lugar</h2>
-      <div class="legend"><span><i class="b-cost"></i>custo</span><span><i class="b-fee"></i>taxa / parte da loja</span><span><i class="b-profit"></i>seu lucro</span></div>
-      <div class="chan" id="c-site"></div>
-      <div class="chan" id="c-shopee"></div>
-      <div class="chan" id="c-consig"></div>
-    </div>
-
-    <div class="tip"><b>Dica:</b> chaveiro sozinho na Shopee fica caro. Lá, venda em kit de 3 ou 5 (ponha 24 g e veja).</div>
+    <div class="tip"><b>Por que a Shopee é mais cara:</b> ela fica com 20% + R$ 4,50 de cada venda. O preço maior faz sobrar para você o mesmo lucro do site.</div>
   </section>
 
   <!-- SHOPEE -->
   <section class="panel" role="tabpanel" id="p-shopee" aria-labelledby="t-shopee" hidden>
     <div class="card big">
       <svg viewBox="0 0 44 44" aria-hidden="true"><rect x="6" y="14" width="32" height="24" rx="5" fill="var(--accent)"/><path d="M15 15a7 7 0 0 1 14 0" fill="none" stroke="var(--fg)" stroke-width="3"/></svg>
-      <div><h2>Shopee com o seu CPF</h2><p>Ela fica com <b>20% + R$ 7</b> de cada peça até R$ 79,99. Quando abrir o MEI, a taxa cai R$ 3.</p></div>
+      <div><h2>Shopee com o seu CPF</h2><p>Ela fica com <b>20% + R$ 4,50</b> de cada venda até R$ 79,99. Os preços da aba Preço já contam isso.</p></div>
     </div>
 
     <div class="card">
@@ -231,7 +241,7 @@ input,select{font:600 18px var(--body);padding:10px 12px;border-radius:10px;bord
     <div class="card">
       <h3>Primeiros anúncios</h3>
       <div class="grid2">
-        <div class="mini"><span class="t">5 a 10 anúncios</span><span class="d">Os 5 organizadores campeões + kits de chaveiro.</span></div>
+        <div class="mini"><span class="t">Primeiro os 3 kits de Natal</span><span class="d">Depois os organizadores e os kits de chaveiro.</span></div>
         <div class="mini"><span class="t">5 fotos cada</span><span class="d">Fundo liso, uma com a mão (mostra o tamanho), um vídeo curto.</span></div>
         <div class="mini"><span class="t">Título que buscam</span><span class="d">"Suporte Headset Mesa Gamer Impresso 3D Laranja"</span></div>
         <div class="mini"><span class="t">Cores num anúncio só</span><span class="d">Só as 8 cores que você tem.</span></div>
@@ -240,7 +250,7 @@ input,select{font:600 18px var(--body);padding:10px 12px;border-radius:10px;bord
 
     <div class="tip"><b>Atenção:</b> poste em até 2 dias úteis. Atrasar muito esconde a loja. Deixe 2 ou 3 de cada campeão já prontos.</div>
     <div class="tip"><b>Sem contato:</b> o chat é dentro do app e não mostra seu telefone. Nunca passe WhatsApp ou Pix por fora: a Shopee bloqueia.</div>
-    <div class="tip"><b>Para decidir:</b> na Shopee a venda vai para o Brasil todo (o frete é com eles). No site continua só SP.</div>
+    <div class="tip"><b>Decidido:</b> na Shopee você vende para o Brasil todo (o frete é com eles). No site continua só SP.</div>
   </section>
 
   <!-- CONSIGNAÇÃO -->
@@ -283,17 +293,24 @@ input,select{font:600 18px var(--body);padding:10px 12px;border-radius:10px;bord
 
   <!-- IDEIAS -->
   <section class="panel" role="tabpanel" id="p-ideias" aria-labelledby="t-ideias" hidden>
-    <div class="tip"><b>Mais urgente: Natal.</b> Anuncie kits de presente até o fim de novembro.</div>
+    <div class="tip"><b>Meta:</b> os 3 kits anunciados até 13/11, antes da Black Friday (27/11) e do amigo secreto.</div>
     <div class="grid2">
-      <div class="mini"><span class="tag">fácil</span><span class="t">Kits de Natal</span><span class="d">Enfeites, chaveiros e mini figuras em caixinha.</span></div>
-      <div class="mini"><span class="tag">fácil</span><span class="t">Mercado Livre</span><span class="d">Igual à Shopee, outro público.</span></div>
-      <div class="mini"><span class="tag">fácil</span><span class="t">Elo7</span><span class="d">Site de coisas feitas à mão. Bom para personalizado.</span></div>
-      <div class="mini"><span class="tag">médio</span><span class="t">Atacado</span><span class="d">Loja compra 20+ peças com 40% de desconto e paga antes.</span></div>
-      <div class="mini"><span class="tag">médio</span><span class="t">Lembrancinhas</span><span class="d">10 a 50 chaveiros com o tema da festa.</span></div>
-      <div class="mini"><span class="tag">médio</span><span class="t">Brindes de empresa</span><span class="d">Chaveiro ou suporte com a logo deles.</span></div>
-      <div class="mini"><span class="tag">médio</span><span class="t">Escolas</span><span class="d">Peças didáticas para professores. Você conhece esse público.</span></div>
-      <div class="mini"><span class="tag">médio</span><span class="t">TikTok Shop</span><span class="d">Vende direto pelo vídeo das peças.</span></div>
-      <div class="mini"><span class="tag">difícil</span><span class="t">Caixa surpresa</span><span class="d">Cliente paga todo mês e recebe 2 ou 3 peças.</span></div>
+      <div class="mini"><span class="tag">kit 1</span><span class="t">6 enfeites de árvore</span><span class="d">Estrela, bola, floco de neve e sino, com cordinha. Site R$ 22,90.</span></div>
+      <div class="mini"><span class="tag">kit 2</span><span class="t">3 chaveiros natalinos</span><span class="d">Papai Noel, rena e boneco de neve. Ideal para amigo secreto. Site R$ 22,90.</span></div>
+      <div class="mini"><span class="tag">kit 3</span><span class="t">3 mini figuras de mesa</span><span class="d">Papai Noel, rena e árvore pequenos. Site R$ 27,90.</span></div>
+    </div>
+    <div class="card">
+      <h3>Os modelos</h3>
+      <p>Pegue prontos na internet ou peça para mim, e eu faço multicores. Nos prontos, confira a licença: se tiver "NC" ou "Non-Commercial", não pode vender.</p>
+    </div>
+    <div class="card">
+      <h3>Depois do Natal (ideias para avaliar)</h3>
+      <div class="grid2">
+        <div class="mini"><span class="t">Mercado Livre</span><span class="d">Igual à Shopee, outro público.</span></div>
+        <div class="mini"><span class="t">Lembrancinhas</span><span class="d">10 a 50 chaveiros com o tema da festa.</span></div>
+        <div class="mini"><span class="t">Escolas</span><span class="d">Peças didáticas para professores.</span></div>
+        <div class="mini"><span class="t">Atacado</span><span class="d">Loja compra 20 ou mais com desconto e paga antes.</span></div>
+      </div>
     </div>
   </section>
 
@@ -303,7 +320,7 @@ input,select{font:600 18px var(--body);padding:10px 12px;border-radius:10px;bord
     <ul class="tasks" id="lista-todas"></ul>
   </section>
 
-  <p class="foot">Taxas da Shopee de novembro de 2026, segundo <a href="https://ecommercenapratica.com/blog/taxa-shopee/" target="_blank" rel="noopener">E-commerce na Prática</a> e <a href="https://gosmarter.com.br/taxas-shopee-2026/" target="_blank" rel="noopener">GoSmarter</a>. Confira na Central do Vendedor antes de pôr o preço. Valores de custo são estimativas.</p>
+  <p class="foot">Taxa da Shopee de 29/10/2026 (20% + R$ 4,50 até R$ 79,99). Confira na Central do Vendedor antes de pôr o preço. Custos são estimativas.</p>
 </div>
 
 <script>
@@ -320,62 +337,6 @@ input,select{font:600 18px var(--body);padding:10px 12px;border-radius:10px;bord
   }
   tabs.forEach(t=>t.addEventListener('click',()=>{ show(t.id); window.scrollTo({top:0}); }));
   const saved=store.get('rg-aba'); show(saved && document.getElementById(saved) ? saved : 't-hoje');
-
-  // calculadora
-  const brl = v => 'R$ ' + v.toFixed(2).replace('.',',');
-  const r90 = v => Math.max(0.9, Math.ceil(v + 0.10) - 0.10);
-  let mult = 3;
-  document.querySelectorAll('#mult button').forEach(b=>b.addEventListener('click',()=>{
-    mult=parseFloat(b.dataset.m);
-    document.querySelectorAll('#mult button').forEach(x=>x.setAttribute('aria-pressed', x===b));
-    calc();
-  }));
-  // taxa Shopee CPF por faixa (inclui +R$3 do CPF)
-  function shopeeFee(p){
-    if(p<80) return {pct:.20, fix:7};
-    if(p<100) return {pct:.14, fix:19};
-    if(p<200) return {pct:.14, fix:23};
-    if(p<500) return {pct:.14, fix:29};
-    return {pct:.14, fix:29};
-  }
-  function shopeePrice(custo, lucro){
-    // tenta cada faixa e fica com a que bate
-    const bands=[[0,79.99,.20,7],[80,99.99,.14,19],[100,199.99,.14,23],[200,1e9,.14,29]];
-    for(const [lo,hi,pct,fix] of bands){
-      const p=(custo+lucro+fix)/(1-pct);
-      if(p>=lo && p<=hi) return p;
-      if(p<lo) return lo; // pulo de faixa: usa o mínimo da faixa
-    }
-    return (custo+lucro+29)/0.86;
-  }
-  function render(el, name, note, price, custo, fee){
-    const lucro = price - custo - fee;
-    const tot = Math.max(price, custo + fee);
-    const w = x => Math.max(0, x/tot*100).toFixed(1)+'%';
-    el.innerHTML =
-      '<div class="chanhead"><h3>'+name+'</h3><span class="price">'+brl(price)+'</span></div>'+
-      '<div class="bar" role="img" aria-label="'+name+': custo '+brl(custo)+', taxa '+brl(fee)+', lucro '+brl(lucro)+'">'+
-        '<span class="b-cost" style="width:'+w(custo)+'"></span>'+
-        '<span class="b-fee" style="width:'+w(fee)+'"></span>'+
-        '<span class="b-profit" style="width:'+w(lucro)+'"></span></div>'+
-      '<p>'+note+' Sobra para você: <span class="profit'+(lucro<0?' neg':'')+'">'+brl(lucro)+'</span></p>';
-  }
-  function calc(){
-    const g=Math.max(0, parseFloat(document.getElementById('g').value)||0);
-    const kg=Math.max(0, parseFloat(document.getElementById('kg').value)||0);
-    const extra=parseFloat(document.getElementById('cores').value)||0;
-    const custo=((g*kg/1000)*(1+extra) + 1.5) * 1.10;
-    document.getElementById('custo').textContent=brl(custo);
-    const lucro=custo*(mult-1);
-    const site=r90(custo*mult);
-    render(document.getElementById('c-site'),'Site e Instagram','Sem taxa.',site,custo,0);
-    const sp=r90(shopeePrice(custo, site-custo));
-    const f=shopeeFee(sp);
-    render(document.getElementById('c-shopee'),'Shopee','Mesmo lucro do site.',sp,custo,sp*f.pct+f.fix);
-    render(document.getElementById('c-consig'),'Consignação (preço na loja)','A loja fica com 30%.',site,custo,site*0.30);
-  }
-  ['g','kg','cores'].forEach(id=>document.getElementById(id).addEventListener('input',calc));
-  calc();
 
   // copiar
   document.getElementById('copiar').addEventListener('click',e=>{
