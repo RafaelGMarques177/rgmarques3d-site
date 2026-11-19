@@ -4,11 +4,11 @@
    (onde o navegador permitir). */
 (function () {
   const BASE = [
-    { id: "n1",  t: "Escolher os modelos dos 3 kits de Natal", d: "2026-11-09", aba: "t-ideias", dica: "Pegue prontos (licença que permite vender) ou me peça." },
+    { id: "n1",  t: "Escolher os modelos dos 2 kits de Natal", d: "2026-11-09", aba: "t-ideias", dica: "Pegue prontos (licença que permite vender) ou me peça." },
     { id: "n2",  t: "Abrir a conta na Shopee",                 d: "2026-11-10", aba: "t-shopee", dica: "Se ainda não abriu. Uns 30 minutos." },
     { id: "n3",  t: "Imprimir 1 de cada kit de Natal",         d: "2026-11-11", aba: "t-ideias", dica: "São as amostras para as fotos." },
-    { id: "n4",  t: "Tirar fotos dos 3 kits",                  d: "2026-11-12", aba: "t-shopee", dica: "Fundo liso e uma foto com a mão segurando." },
-    { id: "n5",  t: "Publicar os 3 kits na Shopee e no site",  d: "2026-11-13", aba: "t-preco",  dica: "Os preços estão na aba Preço." },
+    { id: "n4",  t: "Tirar fotos dos 2 kits",                  d: "2026-11-12", aba: "t-shopee", dica: "Fundo liso e uma foto com a mão segurando." },
+    { id: "n5",  t: "Publicar os 2 kits na Shopee e no site",  d: "2026-11-13", aba: "t-preco",  dica: "Os preços estão na aba Preço." },
     { id: "n6",  t: "Post no Instagram dos kits de Natal",     d: "2026-11-14" },
     { id: "n7",  t: "Imprimir o expositor com logo e QR code", d: "2026-11-16", aba: "t-consig" },
     { id: "n8",  t: "Mandar mensagem para 3 lojas",            d: "2026-11-17", aba: "t-consig", dica: "A mensagem pronta está na aba Consignação." },
